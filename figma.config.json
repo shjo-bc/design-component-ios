@@ -1,0 +1,8 @@
+{
+  "codeConnect": {
+    "include": ["codeconnect/**/*.figma.ts"],
+    "label": "SwiftUI",
+    "language": "swift",
+    "defaultBranch": "main"
+  }
+}
