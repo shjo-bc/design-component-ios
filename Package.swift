@@ -2,15 +2,15 @@
 import PackageDescription
 
 let package = Package(
-    name: "PayboocDesignSystem",
+    name: "BCPDesignSystem",
     platforms: [.iOS(.v16)],
     products: [
-        .library(name: "PayboocDesignSystem", targets: ["PayboocDesignSystem"])
+        .library(name: "BCPDesignSystem", targets: ["BCPDesignSystem"])
     ],
     targets: [
         .target(
-            name: "PayboocDesignSystem",
-            path: "Sources/PayboocDesignSystem"
+            name: "BCPDesignSystem",
+            path: "Sources/BCPDesignSystem"
         )
     ]
 )
