@@ -25,6 +25,8 @@ struct BCPButtonMetrics {
     let fontSize: CGFloat
     let lineHeight: CGFloat
     let fontWeight: Int
+    /// Figma 에서 높이가 FIXED 로 잡힌 사이즈. `xlarge` 만 해당한다.
+    let fixedHeight: Bool
 }
 
 extension BCPButtonSize {
@@ -38,7 +40,8 @@ extension BCPButtonSize {
                 gap: BCPDimens.spacing4,
                 fontSize: BCPTypographyTokens.font1Paragraph7_1Size,
                 lineHeight: BCPTypographyTokens.font1Paragraph7_1LineHeight,
-                fontWeight: BCPTypographyTokens.font1Paragraph7_1Weight
+                fontWeight: BCPTypographyTokens.font1Paragraph7_1Weight,
+                fixedHeight: false
             )
         case .small:
             return BCPButtonMetrics(
@@ -48,7 +51,8 @@ extension BCPButtonSize {
                 gap: BCPDimens.spacing6,
                 fontSize: BCPTypographyTokens.font1Paragraph6_1Size,
                 lineHeight: BCPTypographyTokens.font1Paragraph6_1LineHeight,
-                fontWeight: BCPTypographyTokens.font1Paragraph6_1Weight
+                fontWeight: BCPTypographyTokens.font1Paragraph6_1Weight,
+                fixedHeight: false
             )
         case .medium:
             return BCPButtonMetrics(
@@ -58,7 +62,8 @@ extension BCPButtonSize {
                 gap: BCPDimens.spacing6,
                 fontSize: BCPTypographyTokens.font1Paragraph5_1Size,
                 lineHeight: BCPTypographyTokens.font1Paragraph5_1LineHeight,
-                fontWeight: BCPTypographyTokens.font1Paragraph5_1Weight
+                fontWeight: BCPTypographyTokens.font1Paragraph5_1Weight,
+                fixedHeight: false
             )
         case .large:
             return BCPButtonMetrics(
@@ -68,7 +73,8 @@ extension BCPButtonSize {
                 gap: BCPDimens.spacing6,
                 fontSize: BCPTypographyTokens.font1Paragraph3_1Size,
                 lineHeight: BCPTypographyTokens.font1Paragraph3_1LineHeight,
-                fontWeight: BCPTypographyTokens.font1Paragraph3_1Weight
+                fontWeight: BCPTypographyTokens.font1Paragraph3_1Weight,
+                fixedHeight: false
             )
         case .xlarge:
             return BCPButtonMetrics(
@@ -78,7 +84,8 @@ extension BCPButtonSize {
                 gap: BCPDimens.spacing6,
                 fontSize: BCPTypographyTokens.font1Paragraph2_1Size,
                 lineHeight: BCPTypographyTokens.font1Paragraph2_1LineHeight,
-                fontWeight: BCPTypographyTokens.font1Paragraph2_1Weight
+                fontWeight: BCPTypographyTokens.font1Paragraph2_1Weight,
+                fixedHeight: true
             )
         case .xxlarge:
             return BCPButtonMetrics(
@@ -88,7 +95,8 @@ extension BCPButtonSize {
                 gap: BCPDimens.spacing10,
                 fontSize: BCPTypographyTokens.font1Subheading1_1Size,
                 lineHeight: BCPTypographyTokens.font1Subheading1_1LineHeight,
-                fontWeight: BCPTypographyTokens.font1Subheading1_1Weight
+                fontWeight: BCPTypographyTokens.font1Subheading1_1Weight,
+                fixedHeight: false
             )
         }
     }
@@ -201,6 +209,20 @@ public struct BCPButton: View {
     }
 }
 
+/// Figma 에서 `xlarge` 만 높이 FIXED 56 이고 나머지는 세로 패딩으로 높이가 결정된다.
+/// 고정 높이 세트는 `.frame(height:)`, 나머지는 `minHeight` 로 내용에 따라 늘어난다.
+private struct BCPButtonHeight: ViewModifier {
+    let metrics: BCPButtonMetrics
+
+    func body(content: Content) -> some View {
+        if metrics.fixedHeight {
+            content.frame(height: metrics.height)
+        } else {
+            content.frame(minHeight: metrics.height)
+        }
+    }
+}
+
 private struct BCPButtonStyle: ButtonStyle {
     let metrics: BCPButtonMetrics
     let palette: BCPButtonPalette
@@ -211,13 +233,14 @@ private struct BCPButtonStyle: ButtonStyle {
         configuration.label
             .foregroundColor(palette.content)
             .padding(.horizontal, metrics.horizontalPadding)
-            .frame(minHeight: metrics.height)
+            .modifier(BCPButtonHeight(metrics: metrics))
             .background(
                 RoundedRectangle(cornerRadius: metrics.cornerRadius, style: .continuous)
                     .fill(palette.surface)
             )
             // pressed 는 표면 색 교체가 아니라 오버레이 1장이다 (Figma fills 2장 구조).
-            .background(
+            // `.background` 를 두 번 쌓으면 뒤로 밀려 불투명 표면에 가려지므로 `.overlay` 여야 한다.
+            .overlay(
                 RoundedRectangle(cornerRadius: metrics.cornerRadius, style: .continuous)
                     .fill(enabled && configuration.isPressed ? pressedOverlay : Color.clear)
             )

@@ -6,7 +6,10 @@ import SwiftUI
 /// 앱 번들에 폰트가 없으면 `Font.custom` 이 시스템 폰트로 폴백하므로,
 /// 폰트 등록은 이 패키지가 아니라 앱 쪽 책임이다.
 public enum BCPFont {
-    public static let defaultFamily = BCPTypographyTokens.font1Paragraph3_1Family
+    /// 토큰이 지정한 서체 이름. 현재 57개 타이포 그룹 전부 같은 값이지만,
+    /// 임의의 한 토큰을 전역 기본값으로 참조하면 한 그룹만 달라져도 조용히 틀린다.
+    /// Kotlin 쪽 `BCPFont.TOKEN_FAMILY` 와 같은 리터럴을 쓴다.
+    public static let defaultFamily = "Pretendard"
 
     public static func weight(_ value: Int) -> Font.Weight {
         switch value {
