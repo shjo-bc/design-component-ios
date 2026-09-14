@@ -23,7 +23,7 @@ const disabled = instance.getEnum('state', {
 
 export default {
   example: figma.code`
-BCPButton(${label}, size: .large, type: ${type}) {
+BCPButton("${label}", size: .large, type: ${type}) {
     // action
 }
 .disabled(${disabled})
