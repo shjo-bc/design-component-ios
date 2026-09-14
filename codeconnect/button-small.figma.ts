@@ -32,8 +32,8 @@ const example =
   !hasLeading && !hasTrailing ? figma.code`
 BCPButton(
     "${label}",
-    size: .small,
-    type: ${type}
+    type: ${type},
+    size: .small
 ) {
     // action
 }
@@ -42,8 +42,8 @@ ${disabledModifier}
   !hasLeading && hasTrailing ? figma.code`
 BCPButton(
     "${label}",
-    size: .small,
     type: ${type},
+    size: .small,
     trailingIcon: Image("<아이콘>")
 ) {
     // action
@@ -53,8 +53,8 @@ ${disabledModifier}
   hasLeading && !hasTrailing ? figma.code`
 BCPButton(
     "${label}",
-    size: .small,
     type: ${type},
+    size: .small,
     leadingIcon: Image("<아이콘>")
 ) {
     // action
@@ -64,8 +64,8 @@ ${disabledModifier}
   figma.code`
 BCPButton(
     "${label}",
-    size: .small,
     type: ${type},
+    size: .small,
     leadingIcon: Image("<아이콘>"),
     trailingIcon: Image("<아이콘>")
 ) {

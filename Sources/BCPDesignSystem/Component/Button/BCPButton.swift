@@ -1,11 +1,5 @@
 import SwiftUI
 
-/// 버튼 크기. Figma 에서는 size 가 variant 축이 아니라 **컴포넌트 세트가 분리**되어 있고,
-/// 세트마다 지원하는 type·state 축이 다르다. 자세한 내용은 `shared/figma/button-style.json`.
-public enum BCPButtonSize: Sendable {
-    case xsmall, small, medium, large, xlarge, xxlarge
-}
-
 /// 버튼 스타일.
 ///
 /// Figma 의 `outlined-1` / `outlined-2` 를 각각 `.outlined` / `.outlinedSubtle` 로 옮겼다
@@ -15,6 +9,49 @@ public enum BCPButtonSize: Sendable {
 /// 대부분의 사이즈에서 존재하지 않는 조합이라 공통 API 에 넣으면 런타임에만 틀린다.
 public enum BCPButtonType: Sendable {
     case primary, secondary, outlined, outlinedSubtle
+}
+
+/// 버튼 크기. Figma 에서는 size 가 variant 축이 아니라 **컴포넌트 세트가 분리**되어 있고,
+/// 세트마다 지원하는 type·state 축이 다르다. 자세한 내용은 `shared/figma/button-style.json`.
+public enum BCPButtonSize: Sendable {
+    case xsmall, small, medium, large, xlarge, xxlarge
+}
+
+struct BCPButtonPalette {
+    let surface: Color
+    let content: Color
+    let border: Color?
+}
+
+extension BCPButtonType {
+    func palette(_ c: BCPComponentColors, enabled: Bool) -> BCPButtonPalette {
+        switch self {
+        case .primary:
+            return BCPButtonPalette(
+                surface: enabled ? c.buttonPrimaryNormal : c.buttonPrimaryDisabled,
+                content: enabled ? c.buttonPrimaryTextNormal : c.buttonPrimaryTextDisabled,
+                border: nil
+            )
+        case .secondary:
+            return BCPButtonPalette(
+                surface: enabled ? c.buttonSecondaryNormal : c.buttonSecondaryDisabled,
+                content: enabled ? c.buttonSecondaryTextNormal : c.buttonSecondaryTextDisabled,
+                border: nil
+            )
+        case .outlined:
+            return BCPButtonPalette(
+                surface: enabled ? c.buttonOutlined1Normal : c.buttonOutlined1Disabled,
+                content: enabled ? c.buttonOutlined1TextNormal : c.buttonOutlined1TextDisabled,
+                border: enabled ? c.buttonOutlined1NormalBorder : c.buttonOutlined1DisabledBorder
+            )
+        case .outlinedSubtle:
+            return BCPButtonPalette(
+                surface: enabled ? c.buttonOutlined2Normal : c.buttonOutlined2Disabled,
+                content: enabled ? c.buttonOutlined2TextNormal : c.buttonOutlined2TextDisabled,
+                border: enabled ? c.buttonOutlined2NormalBorder : c.buttonOutlined2DisabledBorder
+            )
+        }
+    }
 }
 
 struct BCPButtonMetrics {
@@ -102,43 +139,6 @@ extension BCPButtonSize {
     }
 }
 
-struct BCPButtonPalette {
-    let surface: Color
-    let content: Color
-    let border: Color?
-}
-
-extension BCPButtonType {
-    func palette(_ c: BCPComponentColors, enabled: Bool) -> BCPButtonPalette {
-        switch self {
-        case .primary:
-            return BCPButtonPalette(
-                surface: enabled ? c.buttonPrimaryNormal : c.buttonPrimaryDisabled,
-                content: enabled ? c.buttonPrimaryTextNormal : c.buttonPrimaryTextDisabled,
-                border: nil
-            )
-        case .secondary:
-            return BCPButtonPalette(
-                surface: enabled ? c.buttonSecondaryNormal : c.buttonSecondaryDisabled,
-                content: enabled ? c.buttonSecondaryTextNormal : c.buttonSecondaryTextDisabled,
-                border: nil
-            )
-        case .outlined:
-            return BCPButtonPalette(
-                surface: enabled ? c.buttonOutlined1Normal : c.buttonOutlined1Disabled,
-                content: enabled ? c.buttonOutlined1TextNormal : c.buttonOutlined1TextDisabled,
-                border: enabled ? c.buttonOutlined1NormalBorder : c.buttonOutlined1DisabledBorder
-            )
-        case .outlinedSubtle:
-            return BCPButtonPalette(
-                surface: enabled ? c.buttonOutlined2Normal : c.buttonOutlined2Disabled,
-                content: enabled ? c.buttonOutlined2TextNormal : c.buttonOutlined2TextDisabled,
-                border: enabled ? c.buttonOutlined2NormalBorder : c.buttonOutlined2DisabledBorder
-            )
-        }
-    }
-}
-
 private enum BCPButtonIconSize {
     static let leading: CGFloat = 20
     static let trailing: CGFloat = 16
@@ -157,8 +157,8 @@ private enum BCPButtonIconSize {
 ///   - trailingIcon: 16pt 로 그려진다.
 public struct BCPButton: View {
     private let title: String
-    private let size: BCPButtonSize
     private let type: BCPButtonType
+    private let size: BCPButtonSize
     private let leadingIcon: Image?
     private let trailingIcon: Image?
     private let action: () -> Void
@@ -168,15 +168,15 @@ public struct BCPButton: View {
 
     public init(
         _ title: String,
-        size: BCPButtonSize = .large,
         type: BCPButtonType = .primary,
+        size: BCPButtonSize = .large,
         leadingIcon: Image? = nil,
         trailingIcon: Image? = nil,
         action: @escaping () -> Void
     ) {
         self.title = title
-        self.size = size
         self.type = type
+        self.size = size
         self.leadingIcon = leadingIcon
         self.trailingIcon = trailingIcon
         self.action = action
