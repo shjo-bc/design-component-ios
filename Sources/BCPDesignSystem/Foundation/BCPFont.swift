@@ -1,16 +1,33 @@
 import SwiftUI
 
-/// 토큰의 `family` / `size` / `weight` / `line-height` 를 SwiftUI 폰트로 옮긴다.
+/// 합성된 타이포 스타일 하나. `BCPTypography` 가 이 타입으로 57개를 제공한다.
 ///
-/// 디자인 시스템 전체가 Pretendard 를 쓴다 (`font/family/*`).
-/// 앱 번들에 폰트가 없으면 `Font.custom` 이 시스템 폰트로 폴백하므로,
-/// 폰트 등록은 이 패키지가 아니라 앱 쪽 책임이다.
-public enum BCPFont {
-    /// 토큰이 지정한 서체 이름. 현재 57개 타이포 그룹 전부 같은 값이지만,
-    /// 임의의 한 토큰을 전역 기본값으로 참조하면 한 그룹만 달라져도 조용히 틀린다.
-    /// Kotlin 쪽 `BCPFont.TOKEN_FAMILY` 와 같은 리터럴을 쓴다.
-    public static let defaultFamily = "Pretendard"
+/// 폰트 리소스 등록은 이 패키지가 아니라 **앱 책임**이다.
+/// 번들에 없으면 `Font.custom` 이 시스템 폰트로 폴백한다 — 레이아웃은 맞고 서체만 다르다.
+public struct BCPTextStyle: Sendable, Equatable {
+    public let family: String
+    public let size: CGFloat
+    public let weight: Int
+    public let lineHeight: CGFloat
 
+    public init(family: String, size: CGFloat, weight: Int, lineHeight: CGFloat) {
+        self.family = family
+        self.size = size
+        self.weight = weight
+        self.lineHeight = lineHeight
+    }
+
+    public var font: Font {
+        .custom(family, size: size).weight(BCPFont.weight(weight))
+    }
+
+    /// SwiftUI 의 `lineSpacing` 은 줄 *사이* 간격이라 line-height 에서 폰트 크기를 뺀다.
+    public var lineSpacing: CGFloat { max(0, lineHeight - size) }
+}
+
+public enum BCPFont {
+    /// 디자인 시스템이 쓰는 서체는 둘이다 — `font-1/…` Pretendard, `font-2/…` Gmarket Sans.
+    /// 스타일마다 자기 서체를 들고 있으므로 전역 기본값은 두지 않는다.
     public static func weight(_ value: Int) -> Font.Weight {
         switch value {
         case ..<200: return .ultraLight
@@ -24,16 +41,11 @@ public enum BCPFont {
         default: return .black
         }
     }
-
-    public static func font(family: String = defaultFamily, size: CGFloat, weight: Int) -> Font {
-        .custom(family, size: size).weight(self.weight(weight))
-    }
 }
 
 public extension View {
-    /// 토큰 기준 줄간격. SwiftUI 의 `lineSpacing` 은 줄 *사이* 간격이라
-    /// line-height 에서 폰트 크기를 뺀 값을 넘긴다.
-    func bcpLineHeight(fontSize: CGFloat, lineHeight: CGFloat) -> some View {
-        lineSpacing(max(0, lineHeight - fontSize))
+    /// 토큰 기준 폰트와 줄간격을 한 번에 적용한다.
+    func bcpTextStyle(_ style: BCPTextStyle) -> some View {
+        font(style.font).lineSpacing(style.lineSpacing)
     }
 }

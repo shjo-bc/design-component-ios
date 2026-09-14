@@ -59,9 +59,7 @@ struct BCPButtonMetrics {
     let horizontalPadding: CGFloat
     let cornerRadius: CGFloat
     let gap: CGFloat
-    let fontSize: CGFloat
-    let lineHeight: CGFloat
-    let fontWeight: Int
+    let textStyle: BCPTextStyle
     /// Figma 에서 높이가 FIXED 로 잡힌 사이즈. `xlarge` 만 해당한다.
     let fixedHeight: Bool
 }
@@ -75,9 +73,7 @@ extension BCPButtonSize {
                 horizontalPadding: BCPDimens.spacing10,
                 cornerRadius: BCPDimens.radius8,
                 gap: BCPDimens.spacing4,
-                fontSize: BCPTypographyTokens.font1Paragraph7_1Size,
-                lineHeight: BCPTypographyTokens.font1Paragraph7_1LineHeight,
-                fontWeight: BCPTypographyTokens.font1Paragraph7_1Weight,
+                textStyle: BCPTypography.font1Paragraph7_1,
                 fixedHeight: false
             )
         case .small:
@@ -86,9 +82,7 @@ extension BCPButtonSize {
                 horizontalPadding: BCPDimens.spacing16,
                 cornerRadius: BCPDimens.radius8,
                 gap: BCPDimens.spacing6,
-                fontSize: BCPTypographyTokens.font1Paragraph6_1Size,
-                lineHeight: BCPTypographyTokens.font1Paragraph6_1LineHeight,
-                fontWeight: BCPTypographyTokens.font1Paragraph6_1Weight,
+                textStyle: BCPTypography.font1Paragraph6_1,
                 fixedHeight: false
             )
         case .medium:
@@ -97,9 +91,7 @@ extension BCPButtonSize {
                 horizontalPadding: BCPDimens.spacing16,
                 cornerRadius: BCPDimens.radius10,
                 gap: BCPDimens.spacing6,
-                fontSize: BCPTypographyTokens.font1Paragraph5_1Size,
-                lineHeight: BCPTypographyTokens.font1Paragraph5_1LineHeight,
-                fontWeight: BCPTypographyTokens.font1Paragraph5_1Weight,
+                textStyle: BCPTypography.font1Paragraph5_1,
                 fixedHeight: false
             )
         case .large:
@@ -108,9 +100,7 @@ extension BCPButtonSize {
                 horizontalPadding: BCPDimens.spacing16,
                 cornerRadius: BCPDimens.radius12,
                 gap: BCPDimens.spacing6,
-                fontSize: BCPTypographyTokens.font1Paragraph3_1Size,
-                lineHeight: BCPTypographyTokens.font1Paragraph3_1LineHeight,
-                fontWeight: BCPTypographyTokens.font1Paragraph3_1Weight,
+                textStyle: BCPTypography.font1Paragraph3_1,
                 fixedHeight: false
             )
         case .xlarge:
@@ -119,9 +109,7 @@ extension BCPButtonSize {
                 horizontalPadding: BCPDimens.spacing16,
                 cornerRadius: BCPDimens.radius16,
                 gap: BCPDimens.spacing6,
-                fontSize: BCPTypographyTokens.font1Paragraph2_1Size,
-                lineHeight: BCPTypographyTokens.font1Paragraph2_1LineHeight,
-                fontWeight: BCPTypographyTokens.font1Paragraph2_1Weight,
+                textStyle: BCPTypography.font1Paragraph2_1,
                 fixedHeight: true
             )
         case .xxlarge:
@@ -130,9 +118,7 @@ extension BCPButtonSize {
                 horizontalPadding: BCPDimens.spacing16,
                 cornerRadius: BCPDimens.radius16,
                 gap: BCPDimens.spacing10,
-                fontSize: BCPTypographyTokens.font1Subheading1_1Size,
-                lineHeight: BCPTypographyTokens.font1Subheading1_1LineHeight,
-                fontWeight: BCPTypographyTokens.font1Subheading1_1Weight,
+                textStyle: BCPTypography.font1Subheading1_1,
                 fixedHeight: false
             )
         }
@@ -190,7 +176,7 @@ public struct BCPButton: View {
                     .resizable()
                     .frame(width: BCPButtonIconSize.leading, height: BCPButtonIconSize.leading)
                 Text(title)
-                    .font(BCPFont.font(size: m.fontSize, weight: m.fontWeight))
+                    .bcpTextStyle(m.textStyle)
                     .lineLimit(1)
                     .truncationMode(.tail)
                 trailingIcon?
