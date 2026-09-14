@@ -15,7 +15,14 @@ const type = instance.getEnum('type', {
     "secondary": ".secondary",
     "outlined-1": ".outlined",
     "outlined-2": ".outlinedSubtle",
-    "gradient": "/* gradient 타입은 SwiftUI 구현에 아직 없습니다 */",
+    "gradient": null,
+  })
+const typeName = instance.getEnum('type', {
+    "primary": "primary",
+    "secondary": "secondary",
+    "outlined-1": "outlined-1",
+    "outlined-2": "outlined-2",
+    "gradient": "gradient",
   })
 // state=pressed 는 런타임 상태라 코드 prop 이 아니다 (docs/naming-contract.md §2)
 const enabled = instance.getEnum('state', {
@@ -29,6 +36,9 @@ const hasLeading = instance.getEnum('left icon', { 'true': true, 'false': false 
 const hasTrailing = instance.getEnum('right icon', { 'true': true, 'false': false })
 
 const example =
+  type == null ? figma.code`
+// ${typeName} 타입은 SwiftUI 에 아직 구현되지 않았습니다
+` :
   !hasLeading && !hasTrailing ? figma.code`
 BCPButton(
     "${label}",
