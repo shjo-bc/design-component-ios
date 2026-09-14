@@ -3,6 +3,9 @@
 // component=BCPButton
 import figma from 'figma'
 
+// ⚠ 이 템플릿은 `large` (2046:6159) 세트의 프로퍼티 철자를 전제한다: icon / icon-3d / Label.
+//   `xsmall` (2080:25710) 만 Icon / Icon-3D (대문자) 이므로 그대로 복사하면 조용히 빈 값이 된다.
+//   세트별 철자는 shared/figma/button.json 의 properties 필드를 확인할 것.
 const instance = figma.selectedInstance
 
 const label = instance.getString('Label')
