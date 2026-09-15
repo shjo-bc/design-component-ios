@@ -165,22 +165,43 @@ public struct BCPTextField: View {
                 .focused($isFocused)
                 .frame(height: 110)
         } else {
-            TextField("", text: $value, prompt: Text(placeholder).foregroundColor(textColor))
+            // `prompt:` 를 쓰지 않는다 — SwiftUI 가 prompt 를 자체 스타일로 그려서
+            // `.foregroundColor` 가 반영되지 않는다. 그러면 iOS 만 시스템 회색으로 뜨고
+            // Compose(BasicText 로 직접 그림)와 색이 갈린다. 같은 방식으로 직접 그린다.
+            TextField("", text: $value)
                 .textFieldStyle(.plain)
                 .bcpTextStyle(BCPTypography.font1Paragraph3_2)
                 .foregroundColor(textColor)
                 .focused($isFocused)
+                .overlay(alignment: .leading) {
+                    if value.isEmpty && !placeholder.isEmpty {
+                        Text(placeholder)
+                            .bcpTextStyle(BCPTypography.font1Paragraph3_2)
+                            .foregroundColor(textColor)
+                            .allowsHitTesting(false)
+                    }
+                }
         }
     }
 
+    /// 금액에 단위가 따라붙는 배치인가. Figma 에서 값이 비어 있으면 단위가 아예 없고
+    /// 간격도 10 이다 (`7736:6362`). 값이 생기면 단위가 붙고 간격이 2 로 좁아진다.
+    private var amountInline: Bool { type == .amount && !value.isEmpty }
+
     private var box: some View {
-        HStack(spacing: type == .amount ? 2 : BCPDimens.spacing10) {
-            field
-            if type == .amount && !value.isEmpty {
+        HStack(spacing: amountInline ? 2 : BCPDimens.spacing10) {
+            if amountInline {
+                // Figma 는 금액을 HUG, 단위를 FILL 로 둔다 (`7736:6365`: 금액 58 hug / 단위 224 fill).
+                // 단위가 남는 폭을 흡수하므로 "원" 은 금액 **바로 옆**에 붙는다.
+                // 필드를 FILL 로 두면 단위가 오른쪽 끝으로 밀려나 디자인과 어긋난다.
+                field.fixedSize(horizontal: true, vertical: false)
                 Text(unit)
                     .bcpTextStyle(BCPTypography.font1Paragraph3_2)
                     .foregroundColor(textColor)
                     .fixedSize()
+                Spacer(minLength: 0)
+            } else {
+                field
             }
             if showsClearButton {
                 Button {
