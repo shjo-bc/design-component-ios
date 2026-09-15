@@ -6,10 +6,12 @@ import SwiftUI
 public struct BCPTheme: Sendable {
     public let semantic: BCPSemanticColors
     public let component: BCPComponentColors
+    public let shadows: BCPShadows
 
     public init(semantic: BCPSemanticColors, component: BCPComponentColors) {
         self.semantic = semantic
         self.component = component
+        self.shadows = BCPShadows(colors: semantic)
     }
 
     public static let light = BCPTheme(semantic: .light, component: .light)
