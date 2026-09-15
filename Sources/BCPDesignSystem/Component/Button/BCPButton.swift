@@ -77,6 +77,9 @@ extension BCPButtonType {
 
 struct BCPButtonMetrics {
     let height: CGFloat
+    /// Figma 가 세로 패딩을 Variable 로 묶어뒀다. 높이는 이 값 ×2 + lineHeight 와 정확히 같다.
+    /// 높이만 박아두면 토큰이 바뀌어도 따라가지 않고, 글자가 커지면 패딩이 0이 된다.
+    let verticalPadding: CGFloat
     let horizontalPadding: CGFloat
     let cornerRadius: CGFloat
     let gap: CGFloat
@@ -91,6 +94,7 @@ extension BCPButtonSize {
         case .xsmall:
             return BCPButtonMetrics(
                 height: 32,
+                verticalPadding: BCPDimens.spacing7,
                 horizontalPadding: BCPDimens.spacing10,
                 cornerRadius: BCPDimens.radius8,
                 gap: BCPDimens.spacing4,
@@ -100,6 +104,7 @@ extension BCPButtonSize {
         case .small:
             return BCPButtonMetrics(
                 height: 40,
+                verticalPadding: BCPDimens.spacing10,
                 horizontalPadding: BCPDimens.spacing16,
                 cornerRadius: BCPDimens.radius8,
                 gap: BCPDimens.spacing6,
@@ -109,6 +114,7 @@ extension BCPButtonSize {
         case .medium:
             return BCPButtonMetrics(
                 height: 44,
+                verticalPadding: BCPDimens.spacing11,
                 horizontalPadding: BCPDimens.spacing16,
                 cornerRadius: BCPDimens.radius10,
                 gap: BCPDimens.spacing6,
@@ -118,6 +124,7 @@ extension BCPButtonSize {
         case .large:
             return BCPButtonMetrics(
                 height: 48,
+                verticalPadding: BCPDimens.spacing11,
                 horizontalPadding: BCPDimens.spacing16,
                 cornerRadius: BCPDimens.radius12,
                 gap: BCPDimens.spacing6,
@@ -127,6 +134,7 @@ extension BCPButtonSize {
         case .xlarge:
             return BCPButtonMetrics(
                 height: 56,
+                verticalPadding: 0,
                 horizontalPadding: BCPDimens.spacing16,
                 cornerRadius: BCPDimens.radius16,
                 gap: BCPDimens.spacing6,
@@ -136,6 +144,7 @@ extension BCPButtonSize {
         case .xxlarge:
             return BCPButtonMetrics(
                 height: 64,
+                verticalPadding: BCPDimens.spacing16,
                 horizontalPadding: BCPDimens.spacing16,
                 cornerRadius: BCPDimens.radius16,
                 gap: BCPDimens.spacing10,
@@ -240,6 +249,7 @@ private struct BCPButtonStyle: ButtonStyle {
         configuration.label
             .foregroundColor(palette.content)
             .padding(.horizontal, metrics.horizontalPadding)
+            .padding(.vertical, metrics.verticalPadding)
             .modifier(BCPButtonHeight(metrics: metrics))
             .background(
                 RoundedRectangle(cornerRadius: metrics.cornerRadius, style: .continuous)

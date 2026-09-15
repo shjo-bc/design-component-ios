@@ -30,6 +30,10 @@ public struct BCPToggle: View {
             Circle()
                 .fill(c.controlToggleKey)
                 .frame(width: Self.thumb, height: Self.thumb)
+                // Figma 손잡이에 drop shadow 가 있다 (black 10%, offset 1/1, blur 2).
+                // `shadow/*` 다섯 토큰 중 어느 것과도 맞지 않는 raw 값이라 토큰으로 위장하지 않는다.
+                // SwiftUI 의 radius 는 표준편차 기반이라 BCPShadows 와 같은 blur/2 규칙을 쓴다.
+                .shadow(color: .black.opacity(0.1), radius: 1, x: 1, y: 1)
                 .padding(.horizontal, Self.inset)
         }
         .frame(width: Self.trackWidth, height: Self.trackHeight)

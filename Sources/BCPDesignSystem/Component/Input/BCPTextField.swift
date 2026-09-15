@@ -188,6 +188,8 @@ public struct BCPTextField: View {
     /// 간격도 10 이다 (`7736:6362`). 값이 생기면 단위가 붙고 간격이 2 로 좁아진다.
     private var amountInline: Bool { type == .amount && !value.isEmpty }
 
+    // 모서리는 원시 `radius/14` 가 아니라 컴포넌트 토큰 `input/basic/radius` 를 쓴다.
+    // 둘 다 값은 14 지만, 입력 필드 모서리만 바뀔 때 원시 토큰을 따라가면 안 된다.
     private var box: some View {
         HStack(spacing: amountInline ? 2 : BCPDimens.spacing10) {
             if amountInline {
@@ -221,12 +223,12 @@ public struct BCPTextField: View {
         .background(
             ZStack {
                 ForEach(Array(surfaces.enumerated()), id: \.offset) { _, color in
-                    RoundedRectangle(cornerRadius: BCPDimens.radius14, style: .continuous).fill(color)
+                    RoundedRectangle(cornerRadius: BCPDimens.inputBasicRadius, style: .continuous).fill(color)
                 }
             }
         )
         .overlay(
-            RoundedRectangle(cornerRadius: BCPDimens.radius14, style: .continuous)
+            RoundedRectangle(cornerRadius: BCPDimens.inputBasicRadius, style: .continuous)
                 .strokeBorder(borderColor, lineWidth: borderWidth)
         )
     }

@@ -8,8 +8,10 @@ public enum BCPCheckboxSize: Sendable {
     var box: CGFloat { self == .medium ? 24 : 20 }
     var vector: BCPVectorSource { self == .medium ? BCPVectorPaths.checkMedium : BCPVectorPaths.checkSmall }
     var iconSize: CGSize { vector.viewBox }
-    /// 24는 둥근 사각형, 20은 원 (Figma 값 r=8 / r=100·999).
-    var cornerRadius: CGFloat { self == .medium ? 8 : 10 }
+    /// 24는 둥근 사각형, 20은 원.
+    /// `small` 의 모서리는 Figma 가 `radius/full` 을 바인딩하고 있어 토큰을 그대로 쓴다.
+    /// `medium` 의 8 은 Figma 에서 변수 바인딩 없는 raw 값이라 토큰으로 위장하지 않는다.
+    var cornerRadius: CGFloat { self == .medium ? 8 : BCPDimens.radiusFull }
 }
 
 /// 페이북 디자인 시스템 체크박스.
