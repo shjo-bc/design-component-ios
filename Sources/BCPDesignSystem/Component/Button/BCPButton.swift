@@ -26,6 +26,17 @@ public enum BCPButtonSize: Sendable {
     case xsmall, small, medium, large, xlarge, xxlarge
 }
 
+/// 버튼이 가로 공간을 쓰는 방식. Figma 의 전폭 CTA(`bottom-button`)처럼 컨테이너를 채워야 하는 배치가 있다.
+///
+/// 호출부에서 `.frame(maxWidth: .infinity)` 를 버튼 **바깥**에 붙이면 표면은 내용 크기 그대로 남고
+/// 프레임만 넓어진다 — 폭은 표면을 그리는 `ButtonStyle` 안에서 정해져야 한다.
+public enum BCPButtonWidth: Sendable {
+    /// 내용 크기에 맞춘다.
+    case hug
+    /// 컨테이너 폭을 채운다.
+    case fill
+}
+
 struct BCPButtonPalette {
     let surface: Color
     let content: Color
@@ -175,6 +186,7 @@ public struct BCPButton: View {
     private let title: String
     private let type: BCPButtonType
     private let size: BCPButtonSize
+    private let width: BCPButtonWidth
     private let leadingIcon: Image?
     private let trailingIcon: Image?
     private let action: () -> Void
@@ -186,6 +198,7 @@ public struct BCPButton: View {
         _ title: String,
         type: BCPButtonType = .primary,
         size: BCPButtonSize = .large,
+        width: BCPButtonWidth = .hug,
         leadingIcon: Image? = nil,
         trailingIcon: Image? = nil,
         action: @escaping () -> Void
@@ -193,6 +206,7 @@ public struct BCPButton: View {
         self.title = title
         self.type = type
         self.size = size
+        self.width = width
         self.leadingIcon = leadingIcon
         self.trailingIcon = trailingIcon
         self.action = action
@@ -217,6 +231,7 @@ public struct BCPButton: View {
         .buttonStyle(
             BCPButtonStyle(
                 metrics: m,
+                width: width,
                 palette: type.palette(theme.component, enabled: isEnabled),
                 pressedOverlay: theme.component.buttonPressed,
                 enabled: isEnabled
@@ -239,8 +254,24 @@ private struct BCPButtonHeight: ViewModifier {
     }
 }
 
+/// 표면(`background`)보다 먼저 적용해야 채운 폭이 그대로 배경이 된다.
+private struct BCPButtonWidthLayout: ViewModifier {
+    let width: BCPButtonWidth
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        switch width {
+        case .hug:
+            content
+        case .fill:
+            content.frame(maxWidth: .infinity)
+        }
+    }
+}
+
 private struct BCPButtonStyle: ButtonStyle {
     let metrics: BCPButtonMetrics
+    let width: BCPButtonWidth
     let palette: BCPButtonPalette
     let pressedOverlay: Color
     let enabled: Bool
@@ -251,6 +282,7 @@ private struct BCPButtonStyle: ButtonStyle {
             .padding(.horizontal, metrics.horizontalPadding)
             .padding(.vertical, metrics.verticalPadding)
             .modifier(BCPButtonHeight(metrics: metrics))
+            .modifier(BCPButtonWidthLayout(width: width))
             .background(
                 RoundedRectangle(cornerRadius: metrics.cornerRadius, style: .continuous)
                     .fill(palette.surface)
