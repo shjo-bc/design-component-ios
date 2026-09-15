@@ -26,10 +26,17 @@ import BCPDesignSystem
 
 struct ContentView: View {
     var body: some View {
-        BCPButton(title: "확인", size: .large) { }
-            .environment(\.bcpTheme, .light)
+        BCPButton("확인", type: .primary, size: .large) { }
     }
 }
+```
+
+테마는 앱 루트에서 한 번 주입한다. 인자 없는 `.bcpTheme()` 는 시스템
+다크모드 설정을 따라가고, 고정하려면 테마를 직접 넘긴다.
+
+```swift
+ContentView().bcpTheme()        // 시스템 설정 추종
+ContentView().bcpTheme(.light)  // 라이트 고정
 ```
 
 배포 대상은 iOS 16 이상이다. `Package.swift` 에 선언된 macOS 13 은 `swift build`
