@@ -39,8 +39,7 @@ ContentView().bcpTheme()        // 시스템 설정 추종
 ContentView().bcpTheme(.light)  // 라이트 고정
 ```
 
-배포 대상은 iOS 16 이상이다. `Package.swift` 에 선언된 macOS 13 은 `swift build`
-로 호스트에서 컴파일을 검증하기 위한 것이다.
+배포 대상은 iOS 15.8 이상이다. 페이북 앱의 최소 지원 버전과 같다.
 
 ## 구조
 

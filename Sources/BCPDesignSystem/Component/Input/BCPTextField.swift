@@ -158,7 +158,7 @@ public struct BCPTextField: View {
     private var field: some View {
         if type == .multiline {
             TextEditor(text: $value)
-                .scrollContentBackground(.hidden)
+                .bcpHiddenScrollBackground()
                 .background(Color.clear)
                 .bcpTextStyle(BCPTypography.font1Paragraph3_2)
                 .foregroundColor(textColor)
@@ -269,5 +269,21 @@ public struct BCPTextField: View {
         }
         .contentShape(Rectangle())
         .onTapGesture { if isEnabled { isFocused = true } }
+    }
+}
+
+// MARK: - 버전 분기
+
+private extension View {
+    /// `TextEditor` 의 기본 스크롤 배경을 지운다.
+    /// iOS 16 미만에는 대체 API 가 없다 — `UITextView.appearance()` 전역 변경은 앱 전체에 번지므로 쓰지 않고,
+    /// 그 버전에서는 `multiline` 에 한해 기본 배경이 남는다.
+    @ViewBuilder
+    func bcpHiddenScrollBackground() -> some View {
+        if #available(iOS 16.0, *) {
+            scrollContentBackground(.hidden)
+        } else {
+            self
+        }
     }
 }
