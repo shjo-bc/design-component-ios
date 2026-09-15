@@ -43,13 +43,3 @@ public struct BCPShadows: Sendable {
         self.elevation4 = BCPShadow(x: 0, y: 8, blur: 40, color: colors.shadowElevation4Color)
     }
 }
-
-public extension View {
-    /// 토큰 그림자를 적용한다.
-    ///
-    /// SwiftUI 의 `shadow(radius:)` 는 표준편차 기반이라 Figma 의 blur 와 단위가 다르다.
-    /// 통상 `radius = blur / 2` 로 맞춘다.
-    func bcpShadow(_ shadow: BCPShadow) -> some View {
-        self.shadow(color: shadow.color, radius: shadow.blur / 2, x: shadow.x, y: shadow.y)
-    }
-}
