@@ -5,10 +5,19 @@ import SwiftUI
 /// Figma 의 `outlined-1` / `outlined-2` 를 각각 `.outlined` / `.outlinedSubtle` 로 옮겼다
 /// (네이밍 계약 §5 매핑표).
 ///
-/// `yellow` / `purple`(xxlarge 전용), `gradient`(small 전용) 는 아직 포함하지 않는다 —
-/// 대부분의 사이즈에서 존재하지 않는 조합이라 공통 API 에 넣으면 런타임에만 틀린다.
+/// `isp` / `openApp` 은 **xxlarge 전용**이다. Figma variant 이름은 `yellow` / `purple` 이지만
+/// 실제로 바인딩하는 토큰이 `button/isp/*` · `button/open-app/*` 이라 용도 기준으로 명명했다
+/// (색 이름은 네이밍 계약 §2 위반이기도 하다).
+///
+/// `gradient`(small 전용)는 아직 포함하지 않는다.
 public enum BCPButtonType: Sendable {
     case primary, secondary, outlined, outlinedSubtle
+
+    /// xxlarge 전용 — Figma `type=yellow`, 토큰 `button/isp/*`
+    case isp
+
+    /// xxlarge 전용 — Figma `type=purple`, 토큰 `button/open-app/*`
+    case openApp
 }
 
 /// 버튼 크기. Figma 에서는 size 가 variant 축이 아니라 **컴포넌트 세트가 분리**되어 있고,
@@ -49,6 +58,18 @@ extension BCPButtonType {
                 surface: enabled ? c.buttonOutlined2Normal : c.buttonOutlined2Disabled,
                 content: enabled ? c.buttonOutlined2TextNormal : c.buttonOutlined2TextDisabled,
                 border: enabled ? c.buttonOutlined2NormalBorder : c.buttonOutlined2DisabledBorder
+            )
+        case .isp:
+            return BCPButtonPalette(
+                surface: enabled ? c.buttonIspNormal : c.buttonIspDisabled,
+                content: enabled ? c.buttonIspTextNormal : c.buttonIspTextDisabled,
+                border: nil
+            )
+        case .openApp:
+            return BCPButtonPalette(
+                surface: enabled ? c.buttonOpenAppNormal : c.buttonOpenAppDisabled,
+                content: enabled ? c.buttonOpenAppTextNormal : c.buttonOpenAppTextDisabled,
+                border: nil
             )
         }
     }
