@@ -6,8 +6,8 @@ public enum BCPCheckboxSize: Sendable {
     case medium, small
 
     var box: CGFloat { self == .medium ? 24 : 20 }
-    var iconSize: CGSize { self == .medium ? CGSize(width: 14, height: 10) : CGSize(width: 11, height: 8) }
-    var path: String { self == .medium ? BCPCheckPaths.medium : BCPCheckPaths.small }
+    var vector: BCPVectorSource { self == .medium ? BCPVectorPaths.checkMedium : BCPVectorPaths.checkSmall }
+    var iconSize: CGSize { vector.viewBox }
     /// 24는 둥근 사각형, 20은 원 (Figma 값 r=8 / r=100·999).
     var cornerRadius: CGFloat { self == .medium ? 8 : 10 }
 }
@@ -51,7 +51,7 @@ public struct BCPCheckbox: View {
             .fill(surface)
             .frame(width: size.box, height: size.box)
             .overlay(
-                BCPVectorShape(source: size.path, viewBox: size.iconSize)
+                BCPVectorShape(size.vector)
                     .fill(icon)
                     .frame(width: size.iconSize.width, height: size.iconSize.height)
             )

@@ -1,11 +1,12 @@
 import SwiftUI
 
 /// Figma `fillGeometry` 가 주는 SVG path 를 SwiftUI `Path` 로 옮긴다.
+/// 경로 자체는 `BCPVectorPaths` 가 들고 있다 (자동 생성).
 ///
 /// Figma 가 내보내는 명령은 절대좌표 `M` / `L` / `C` / `Z` 뿐이다 (실측 확인).
 /// 범용 SVG 파서가 아니다 — 그 이상이 필요해지면 여기서 넓히고 테스트를 붙일 것.
 /// Compose 쪽은 `PathParser` 가 표준으로 있어서 이 대역이 필요 없다.
-struct BCPVectorPath {
+struct BCPVectorParser {
     let commands: [Command]
 
     enum Command {
@@ -72,12 +73,15 @@ struct BCPVectorPath {
 }
 
 /// 벡터 경로를 그리는 Shape.
-struct BCPVectorShape: Shape {
-    let source: String
-    let viewBox: CGSize
+public struct BCPVectorShape: Shape {
+    private let source: BCPVectorSource
 
-    func path(in rect: CGRect) -> Path {
-        guard let parsed = BCPVectorPath(source) else { return Path() }
-        return parsed.path(in: rect, viewBox: viewBox)
+    public init(_ source: BCPVectorSource) {
+        self.source = source
+    }
+
+    public func path(in rect: CGRect) -> Path {
+        guard let parsed = BCPVectorParser(source.d) else { return Path() }
+        return parsed.path(in: rect, viewBox: source.viewBox)
     }
 }
