@@ -82,3 +82,16 @@ struct InputsPage: View {
         }
     }
 }
+
+#if DEBUG
+struct InputsPage_Previews: PreviewProvider {
+    static var previews: some View {
+        ForEach([ColorScheme.light, .dark], id: \.self) { scheme in
+            InputsPage()
+                .bcpTheme()
+                .preferredColorScheme(scheme)
+                .previewDisplayName(scheme == .light ? "Light" : "Dark")
+        }
+    }
+}
+#endif

@@ -84,3 +84,11 @@ struct Page<Content: View>: View {
         }
     }
 }
+
+#if DEBUG
+struct GalleryRoot_Previews: PreviewProvider {
+    static var previews: some View {
+        GalleryRoot()
+    }
+}
+#endif

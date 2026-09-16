@@ -79,3 +79,16 @@ struct ControlsPage: View {
         }
     }
 }
+
+#if DEBUG
+struct ControlsPage_Previews: PreviewProvider {
+    static var previews: some View {
+        ForEach([ColorScheme.light, .dark], id: \.self) { scheme in
+            ControlsPage()
+                .bcpTheme()
+                .preferredColorScheme(scheme)
+                .previewDisplayName(scheme == .light ? "Light" : "Dark")
+        }
+    }
+}
+#endif

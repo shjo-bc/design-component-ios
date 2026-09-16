@@ -82,3 +82,29 @@ public struct BCPUnderlineButton: View {
         .buttonStyle(.plain)
     }
 }
+
+#if DEBUG
+struct BCPUnderlineButton_Previews: PreviewProvider {
+    private static let colors: [(String, BCPUnderlineButtonColor)] = [
+        ("lightGray", .lightGray), ("darkGray", .darkGray), ("blue", .blue),
+    ]
+
+    static var previews: some View {
+        ForEach([ColorScheme.light, .dark], id: \.self) { scheme in
+            VStack(alignment: .leading, spacing: 14) {
+                ForEach(colors, id: \.0) { name, color in
+                    HStack(spacing: 12) {
+                        Text(name).font(.caption).frame(width: 80, alignment: .leading)
+                        BCPUnderlineButton("자세히", color: color, size: .large) {}
+                        BCPUnderlineButton("자세히", color: color, size: .small) {}
+                    }
+                }
+            }
+            .padding()
+            .bcpTheme()
+            .preferredColorScheme(scheme)
+            .previewDisplayName(scheme == .light ? "Light" : "Dark")
+        }
+    }
+}
+#endif

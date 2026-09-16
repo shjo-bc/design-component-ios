@@ -214,3 +214,37 @@ public struct BCPLineTextField: View {
         }
     }
 }
+
+#if DEBUG
+struct BCPLineTextField_Previews: PreviewProvider {
+    /// 밑줄 색이 포커스를 따라가는지, 값이 생기면 지우기 버튼이 나오는지 눌러서 확인한다.
+    private struct Demo: View {
+        @State private var basic = ""
+        @State private var dropdown = ""
+        @State private var focus = false
+
+        var body: some View {
+            VStack(alignment: .leading, spacing: 24) {
+                BCPLineTextField(text: $basic, focus: $focus, label: "이메일",
+                                 placeholder: "Text", helperText: "도움말")
+                BCPLineTextField(text: .constant("wrong"), label: "오류", placeholder: "Text",
+                                 helperText: "형식이 올바르지 않습니다", validation: .invalid)
+                BCPLineTextField(text: $dropdown, type: .dropdown, label: "카드사",
+                                 placeholder: "선택하세요",
+                                 onTap: { dropdown = dropdown.isEmpty ? "BC카드" : "" })
+                BCPLineTextField(text: .constant(""), label: "비활성", placeholder: "Text").disabled(true)
+            }
+            .padding()
+        }
+    }
+
+    static var previews: some View {
+        ForEach([ColorScheme.light, .dark], id: \.self) { scheme in
+            Demo()
+                .bcpTheme()
+                .preferredColorScheme(scheme)
+                .previewDisplayName(scheme == .light ? "Light" : "Dark")
+        }
+    }
+}
+#endif

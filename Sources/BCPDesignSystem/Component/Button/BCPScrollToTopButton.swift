@@ -48,3 +48,18 @@ private struct BCPScrollToTopStyle: ButtonStyle {
             .contentShape(Circle())
     }
 }
+
+#if DEBUG
+struct BCPScrollToTopButton_Previews: PreviewProvider {
+    static var previews: some View {
+        ForEach([ColorScheme.light, .dark], id: \.self) { scheme in
+            BCPScrollToTopButton {}
+                .padding()
+                .bcpTheme()
+                .preferredColorScheme(scheme)
+                .previewLayout(.sizeThatFits)
+                .previewDisplayName(scheme == .light ? "Light" : "Dark")
+        }
+    }
+}
+#endif

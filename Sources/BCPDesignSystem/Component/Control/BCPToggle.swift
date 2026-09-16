@@ -50,3 +50,36 @@ public struct BCPToggle: View {
         .accessibilityAction(named: isOn ? "끄기" : "켜기") { if isEnabled { onChange?(!isOn) } }
     }
 }
+
+#if DEBUG
+struct BCPToggle_Previews: PreviewProvider {
+    private struct Demo: View {
+        @State private var isOn = true
+
+        var body: some View {
+            VStack(alignment: .leading, spacing: 16) {
+                HStack(spacing: 12) {
+                    BCPToggle(isOn: isOn) { isOn = $0 }
+                    Text(isOn ? "켜짐 · 눌러서 전환" : "꺼짐 · 눌러서 전환").font(.caption)
+                }
+                HStack(spacing: 12) {
+                    BCPToggle(isOn: true) { _ in }.disabled(true)
+                    BCPToggle(isOn: false) { _ in }.disabled(true)
+                    Text("비활성").font(.caption)
+                }
+            }
+        }
+    }
+
+    static var previews: some View {
+        ForEach([ColorScheme.light, .dark], id: \.self) { scheme in
+            Demo()
+                .padding()
+                .bcpTheme()
+                .preferredColorScheme(scheme)
+                .previewLayout(.sizeThatFits)
+                .previewDisplayName(scheme == .light ? "Light" : "Dark")
+        }
+    }
+}
+#endif

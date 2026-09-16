@@ -99,3 +99,29 @@ public struct BCPArrowButton: View {
         .buttonStyle(.plain)
     }
 }
+
+#if DEBUG
+struct BCPArrowButton_Previews: PreviewProvider {
+    private static let colors: [(String, BCPArrowButtonColor)] = [
+        ("lightGray", .lightGray), ("darkGray", .darkGray), ("blue", .blue),
+    ]
+
+    static var previews: some View {
+        ForEach([ColorScheme.light, .dark], id: \.self) { scheme in
+            VStack(alignment: .leading, spacing: 14) {
+                ForEach(colors, id: \.0) { name, color in
+                    HStack(spacing: 12) {
+                        Text(name).font(.caption).frame(width: 80, alignment: .leading)
+                        BCPArrowButton("더보기", color: color, size: .large, direction: .right) {}
+                        BCPArrowButton("접기", color: color, size: .small, direction: .up) {}
+                    }
+                }
+            }
+            .padding()
+            .bcpTheme()
+            .preferredColorScheme(scheme)
+            .previewDisplayName(scheme == .light ? "Light" : "Dark")
+        }
+    }
+}
+#endif

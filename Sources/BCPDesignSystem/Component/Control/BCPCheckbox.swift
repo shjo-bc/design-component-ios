@@ -74,3 +74,50 @@ public struct BCPCheckbox: View {
             .accessibilityValue(checked ? "선택됨" : "선택 안 함")
     }
 }
+
+#if DEBUG
+struct BCPCheckbox_Previews: PreviewProvider {
+    /// 상태가 바뀌는 것을 눌러서 확인할 수 있어야 한다 — 정적 스냅샷만으로는
+    /// 전이 중에 색이 어떻게 가는지 알 수 없다.
+    private struct Demo: View {
+        @State private var medium = true
+        @State private var small = false
+
+        var body: some View {
+            VStack(alignment: .leading, spacing: 16) {
+                HStack(spacing: 12) {
+                    BCPCheckbox(checked: medium) { medium = $0 }
+                    Text("medium · 눌러서 전환").font(.caption)
+                }
+                HStack(spacing: 12) {
+                    BCPCheckbox(checked: small, size: .small) { small = $0 }
+                    Text("small").font(.caption)
+                }
+                HStack(spacing: 12) {
+                    BCPCheckbox(checked: true) { _ in }.disabled(true)
+                    BCPCheckbox(checked: false) { _ in }.disabled(true)
+                    Text("비활성").font(.caption)
+                }
+                HStack(spacing: 12) {
+                    ZStack {
+                        Rectangle().fill(Color.gray.opacity(0.25)).frame(width: 44, height: 44)
+                        BCPCheckbox(checked: medium) { medium = $0 }
+                    }
+                    Text("회색이 권장 터치 타깃 44×44").font(.caption)
+                }
+            }
+        }
+    }
+
+    static var previews: some View {
+        ForEach([ColorScheme.light, .dark], id: \.self) { scheme in
+            Demo()
+                .padding()
+                .bcpTheme()
+                .preferredColorScheme(scheme)
+                .previewLayout(.sizeThatFits)
+                .previewDisplayName(scheme == .light ? "Light" : "Dark")
+        }
+    }
+}
+#endif

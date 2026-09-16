@@ -389,3 +389,63 @@ public struct BCPBoxTextField: View {
         }
     }
 }
+
+#if DEBUG
+struct BCPBoxTextField_Previews: PreviewProvider {
+    /// 포커스·입력에 따라 색과 테두리 두께가 어떻게 가는지는 **눌러 봐야** 안다.
+    /// 캔버스에서 Live 모드로 직접 입력해 볼 것.
+    private struct Demo: View {
+        @State private var basic = ""
+        @State private var amount = ""
+        @State private var card = ""
+        @State private var num = ""
+        @State private var dropdown = ""
+        @State private var date = ""
+
+        var body: some View {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 18) {
+                    Group {
+                        Text("basic · amount · multiline").font(.headline)
+                        BCPBoxTextField(text: $basic, type: .basic, placeholder: "Text", helperText: "도움말")
+                        BCPBoxTextField(text: $amount, type: .amount, placeholder: "금액 입력", unit: "원")
+                        BCPBoxTextField(text: .constant(""), type: .multiline, placeholder: "내용", maxLength: 1000)
+                    }
+                    Group {
+                        Text("validation — 오류 상태에서 탭해도 테두리가 2pt 로 두꺼워져야 한다").font(.headline)
+                        BCPBoxTextField(text: $basic, placeholder: "이메일",
+                                        helperText: "형식이 올바르지 않습니다", validation: .invalid)
+                        BCPBoxTextField(text: $basic, placeholder: "이메일",
+                                        helperText: "사용 가능합니다", validation: .valid)
+                        BCPBoxTextField(text: .constant(""), placeholder: "비활성").disabled(true)
+                    }
+                    Group {
+                        Text("금융 입력 — 카드번호는 4자리마다 끊긴다").font(.headline)
+                        BCPBoxTextField(text: $card, type: .cardNumber, placeholder: "카드번호", helperText: "16자리")
+                        BCPBoxTextField(text: $num, type: .number, placeholder: "인증번호",
+                                        helperText: "6자리", buttonTitle: "확인", onButtonTap: {})
+                        BCPBoxTextField(text: $amount, type: .amountLarge, placeholder: "금액 입력", unit: "원")
+                    }
+                    Group {
+                        Text("선택형 — 텍스트 필드가 아니라 버튼으로 읽힌다").font(.headline)
+                        BCPBoxTextField(text: $dropdown, type: .dropdown, placeholder: "선택하세요",
+                                        onTap: { dropdown = dropdown.isEmpty ? "신용카드" : "" })
+                        BCPBoxTextField(text: $date, type: .date, placeholder: "날짜 선택",
+                                        onTap: { date = date.isEmpty ? "2026.09.16" : "" })
+                    }
+                }
+                .padding()
+            }
+        }
+    }
+
+    static var previews: some View {
+        ForEach([ColorScheme.light, .dark], id: \.self) { scheme in
+            Demo()
+                .bcpTheme()
+                .preferredColorScheme(scheme)
+                .previewDisplayName(scheme == .light ? "Light" : "Dark")
+        }
+    }
+}
+#endif

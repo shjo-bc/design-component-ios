@@ -45,3 +45,38 @@ public struct BCPRadioButton: View {
             .accessibilityValue(selected ? "선택됨" : "선택 안 함")
     }
 }
+
+#if DEBUG
+struct BCPRadioButton_Previews: PreviewProvider {
+    private struct Demo: View {
+        @State private var selected = 0
+
+        var body: some View {
+            VStack(alignment: .leading, spacing: 16) {
+                ForEach(0..<3, id: \.self) { i in
+                    HStack(spacing: 12) {
+                        BCPRadioButton(selected: selected == i) { selected = i }
+                        Text("옵션 \(i + 1)").font(.caption)
+                    }
+                }
+                HStack(spacing: 12) {
+                    BCPRadioButton(selected: true) {}.disabled(true)
+                    BCPRadioButton(selected: false) {}.disabled(true)
+                    Text("비활성").font(.caption)
+                }
+            }
+        }
+    }
+
+    static var previews: some View {
+        ForEach([ColorScheme.light, .dark], id: \.self) { scheme in
+            Demo()
+                .padding()
+                .bcpTheme()
+                .preferredColorScheme(scheme)
+                .previewLayout(.sizeThatFits)
+                .previewDisplayName(scheme == .light ? "Light" : "Dark")
+        }
+    }
+}
+#endif

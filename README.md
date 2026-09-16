@@ -52,13 +52,35 @@ codeconnect/        Figma Code Connect 템플릿 (*.figma.ts)
 figma.config.json   label: SwiftUI
 ```
 
-## 갤러리 앱으로 확인하기
+## 화면으로 확인하기
+
+### Xcode Preview (권장)
+
+```bash
+open Package.swift          # Xcode 가 열린다
+```
+
+컴포넌트 파일을 열고 캔버스(⌥⌘↩)를 켜면 바로 렌더된다. **라이트/다크가 나란히** 뜨고,
+Live 모드에서는 눌러서 상태 전이까지 확인할 수 있다 — 포커스에 따라 테두리가 두꺼워지는지,
+값이 생기면 지우기 버튼이 나오는지 같은 것은 눌러 봐야 안다.
+
+preview 는 `#if DEBUG` 안에 있어 **릴리스 빌드에는 포함되지 않는다** (심볼 0개로 확인).
+
+| 파일 | 보이는 것 |
+|---|---|
+| `BCPButton.swift` | 타입 7종 · 크기 6종 · 폭 · 비활성 |
+| `BCPCheckbox.swift` | 상태 전이 + **44×44pt 터치 타깃 대비** |
+| `BCPBoxTextField.swift` | validation · 금융 입력 · 선택형 |
+| `BCPLineTextField.swift` | 밑줄 색 전이 · 지우기 버튼 |
+
+### 갤러리 앱
+
+전체를 한 화면에서 보거나 VoiceOver 로 확인하려면 앱으로 띄운다.
 
 ```bash
 open Examples/BCPGallery/Package.swift   # Xcode → ⌘R
 ```
 
-모든 컴포넌트의 변형을 한 화면에 늘어놓고 라이트/다크를 전환해 볼 수 있다.
 자세한 내용은 [`Examples/BCPGallery/README.md`](Examples/BCPGallery/README.md) 를 본다.
 
 ## 접근성

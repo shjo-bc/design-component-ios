@@ -117,3 +117,32 @@ public struct BCPSearchBar: View {
         .onTapGesture { isFocused = true }
     }
 }
+
+#if DEBUG
+struct BCPSearchBar_Previews: PreviewProvider {
+    private struct Demo: View {
+        @State private var one = ""
+        @State private var two = ""
+
+        var body: some View {
+            VStack(spacing: 16) {
+                BCPSearchBar(text: $one, style: .style1, placeholder: "가맹점 검색")
+                // style2 는 반투명 표면이라 배경이 비쳐야 차이가 보인다.
+                BCPSearchBar(text: $two, style: .style2, placeholder: "가맹점 검색") { two = "" }
+            }
+            .padding()
+            .background(Color.blue.opacity(0.2))
+        }
+    }
+
+    static var previews: some View {
+        ForEach([ColorScheme.light, .dark], id: \.self) { scheme in
+            Demo()
+                .bcpTheme()
+                .preferredColorScheme(scheme)
+                .previewLayout(.sizeThatFits)
+                .previewDisplayName(scheme == .light ? "Light" : "Dark")
+        }
+    }
+}
+#endif

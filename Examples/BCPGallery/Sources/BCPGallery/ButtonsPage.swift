@@ -80,3 +80,16 @@ struct ButtonsPage: View {
         }
     }
 }
+
+#if DEBUG
+struct ButtonsPage_Previews: PreviewProvider {
+    static var previews: some View {
+        ForEach([ColorScheme.light, .dark], id: \.self) { scheme in
+            ButtonsPage()
+                .bcpTheme()
+                .preferredColorScheme(scheme)
+                .previewDisplayName(scheme == .light ? "Light" : "Dark")
+        }
+    }
+}
+#endif

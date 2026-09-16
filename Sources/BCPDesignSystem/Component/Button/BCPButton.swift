@@ -316,3 +316,53 @@ private struct BCPButtonStyle: ButtonStyle {
             .contentShape(RoundedRectangle(cornerRadius: metrics.cornerRadius, style: .continuous))
     }
 }
+
+#if DEBUG
+struct BCPButton_Previews: PreviewProvider {
+    private static let types: [(String, BCPButtonType)] = [
+        ("primary", .primary), ("secondary", .secondary), ("outlined", .outlined),
+        ("outlinedSubtle", .outlinedSubtle), ("isp", .isp), ("openApp", .openApp), ("chip", .chip),
+    ]
+    private static let sizes: [(String, BCPButtonSize)] = [
+        ("xsmall", .xsmall), ("small", .small), ("medium", .medium),
+        ("large", .large), ("xlarge", .xlarge), ("xxlarge", .xxlarge),
+    ]
+
+    static var previews: some View {
+        ForEach([ColorScheme.light, .dark], id: \.self) { scheme in
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("타입").font(.headline)
+                        ForEach(types, id: \.0) { name, type in
+                            HStack {
+                                Text(name).font(.caption).frame(width: 96, alignment: .leading)
+                                BCPButton("확인", type: type, size: .large) {}
+                            }
+                        }
+                    }
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("크기").font(.headline)
+                        ForEach(sizes, id: \.0) { name, size in
+                            HStack {
+                                Text(name).font(.caption).frame(width: 96, alignment: .leading)
+                                BCPButton("확인", type: .primary, size: size) {}
+                            }
+                        }
+                    }
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("폭 · 비활성").font(.headline)
+                        BCPButton("hug", type: .primary, size: .large, width: .hug) {}
+                        BCPButton("fill", type: .primary, size: .large, width: .fill) {}
+                        BCPButton("비활성", type: .primary, size: .large) {}.disabled(true)
+                    }
+                }
+                .padding()
+            }
+            .bcpTheme()
+            .preferredColorScheme(scheme)
+            .previewDisplayName(scheme == .light ? "Light" : "Dark")
+        }
+    }
+}
+#endif
