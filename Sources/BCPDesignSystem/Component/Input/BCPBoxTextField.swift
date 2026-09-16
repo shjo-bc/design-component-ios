@@ -130,7 +130,14 @@ public struct BCPBoxTextField: View {
     }
 
     /// 포커스 계열만 2pt 다. 토큰(`input/basic/*/border-weight`)에 들어 있는 값이다.
+    ///
+    /// **색과 두께를 분리한다.** `validation` 이 켜지면 `state` 가 `invalid`/`valid` 로 고정돼
+    /// 색은 오류색을 유지하는데, 그때 두께까지 1pt 로 묶이면 포커스 피드백이 통째로 사라진다
+    /// (오류난 필드를 고치려고 탭해도 아무 반응이 없다). Figma 에 invalid+focused 교차
+    /// variant 가 없어 코드가 정하는 자리이므로, 색은 validation 이 갖고 두께는 포커스가 갖는다.
+    /// 두 값 모두 Figma 에 있는 것을 조합할 뿐이다.
     private var borderWidth: CGFloat {
+        if type.isEditable && isFocused { return BCPDimens.inputBasicFocusedBorderWeight }
         switch state {
         case .normal: return BCPDimens.inputBasicNormalBorderWeight
         case .focused: return BCPDimens.inputBasicFocusedBorderWeight

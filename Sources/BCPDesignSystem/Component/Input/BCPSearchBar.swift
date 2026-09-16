@@ -21,6 +21,9 @@ public struct BCPSearchBar: View {
     private let onCancel: (() -> Void)?
     @Binding private var value: String
 
+    // 색 계산에는 쓰지 않는다 — Figma 실측상 searchbar 는 4개 state 중 어느 것에서도
+    // surface·hint 색이 같고, 입력 글자 색은 값 유무로만 갈린다. 키보드 포커스를 잡기
+    // 위해서만 필요하다.
     @FocusState private var isFocused: Bool
     @Environment(\.bcpTheme) private var theme
 
