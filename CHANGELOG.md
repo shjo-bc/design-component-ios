@@ -4,6 +4,20 @@
 **0.x 대에서는 공개 API 가 안정적이지 않다** — minor 가 아니라 patch 에서도 깨지는
 변경이 들어갈 수 있으므로, 올릴 때 이 문서를 먼저 확인할 것.
 
+## 0.1.4
+
+### 추가
+
+- `BCPLineTextField` 에 `focus: FocusState<Bool>.Binding?` 파라미터. 화면 진입 직후
+  자동 포커스처럼 호출부가 포커스를 쥐어야 할 때 쓴다. 기본값 `nil` 이라 기존
+  호출부는 그대로 내부 상태로 동작한다.
+
+  ```swift
+  @FocusState private var isEmailFocused: Bool
+
+  BCPLineTextField(text: $email, focus: $isEmailFocused, label: "이메일")
+  ```
+
 ## 0.1.3
 
 ### ⚠️ 깨지는 변경
