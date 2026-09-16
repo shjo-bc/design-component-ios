@@ -129,6 +129,23 @@ public struct BCPBoxTextField: View {
         }
     }
 
+    /// 두께 계산용 상태. `validation` 을 빼고 포커스만 반영한다.
+    ///
+    /// `focused` 와 `typing` 을 각각 그대로 남기는 것이 중요하다 — 두 토큰은 지금 같은 값
+    /// (`border/2`)을 물고 있지만 Figma 에 **별도 변수로** 존재한다. 디자이너가 둘을 갈라놓으면
+    /// 코드를 고치지 않고 따라가야 한다. 포커스 여부만 보고 한쪽으로 고정하면 그 연결이 끊긴다.
+    ///
+    /// `validation` 을 빼도 두께는 어긋나지 않는다 — invalid·valid 의 border-weight 가
+    /// normal·filled 와 같은 1pt 라, 포커스가 없을 때는 어느 쪽으로 계산해도 결과가 같다.
+    private var weightState: BCPInputState {
+        .resolve(
+            enabled: isEnabled,
+            validation: .none,
+            focused: type.isEditable && isFocused,
+            isEmpty: value.isEmpty
+        )
+    }
+
     /// 포커스 계열만 2pt 다. 토큰(`input/basic/*/border-weight`)에 들어 있는 값이다.
     ///
     /// **색과 두께를 분리한다.** `validation` 이 켜지면 `state` 가 `invalid`/`valid` 로 고정돼
@@ -137,8 +154,7 @@ public struct BCPBoxTextField: View {
     /// variant 가 없어 코드가 정하는 자리이므로, 색은 validation 이 갖고 두께는 포커스가 갖는다.
     /// 두 값 모두 Figma 에 있는 것을 조합할 뿐이다.
     private var borderWidth: CGFloat {
-        if type.isEditable && isFocused { return BCPDimens.inputBasicFocusedBorderWeight }
-        switch state {
+        switch weightState {
         case .normal: return BCPDimens.inputBasicNormalBorderWeight
         case .focused: return BCPDimens.inputBasicFocusedBorderWeight
         case .typing: return BCPDimens.inputBasicTypingBorderWeight

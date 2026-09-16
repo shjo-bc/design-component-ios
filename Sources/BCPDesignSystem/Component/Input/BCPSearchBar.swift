@@ -2,7 +2,7 @@ import SwiftUI
 
 /// 검색바 스타일. Figma `searchbar-1` / `searchbar-2` 세트에 대응한다.
 ///
-/// 두 세트는 **표면 색만** 다르다 — 글자·힌트 색은 라이트·다크 양쪽에서 값이 같다.
+/// 두 세트는 표면 색이 다르고, 입력 글자는 서로 상대 번호의 토큰을 물고 있다 (Figma 실측).
 public enum BCPSearchBarStyle: Sendable {
     /// `searchbar-1` — 불투명 회색 표면.
     case style1
@@ -58,13 +58,16 @@ public struct BCPSearchBar: View {
         }
     }
 
-    /// Figma 는 `searchbar-1` 의 입력 글자에 `search-2/text-normal` 을, `searchbar-2` 에
-    /// `search-1/text-normal` 을 물려 뒀다. 두 토큰은 라이트·다크 모두 값이 같아서 렌더가
-    /// 달라지지 않는다 — 교차 참조를 따라가지 않고 자기 번호 토큰으로 맞춘다.
+    /// 입력 글자만 **상대 번호** 토큰을 쓴다 — Figma 가 `searchbar-1` 에
+    /// `search-2/text-normal` 을, `searchbar-2` 에 `search-1/text-normal` 을 물려 뒀다.
+    ///
+    /// 두 토큰은 지금 같은 값이라 렌더는 어느 쪽이든 같지만, 값이 아니라 **바인딩된 이름**을
+    /// 따른다. 디자이너가 둘을 갈라놓으면 코드를 고치지 않고 따라가야 한다.
+    /// 교차가 의도인지 실수인지는 디자이너 확인 사항이다 (docs/naming-contract.md §6).
     private var textColor: Color {
         switch style {
-        case .style1: return theme.component.inputSearch1TextNormal
-        case .style2: return theme.component.inputSearch2TextNormal
+        case .style1: return theme.component.inputSearch2TextNormal
+        case .style2: return theme.component.inputSearch1TextNormal
         }
     }
 

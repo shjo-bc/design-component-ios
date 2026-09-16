@@ -98,6 +98,14 @@ public struct BCPLineTextField: View {
 
     private var placeholderColor: Color { theme.component.inputLineNormalTextHint }
 
+    /// `normal` 만 원시 `color/font/neutral/6` 을, 나머지 state 는 `input/line/label` 을
+    /// 물고 있다 (Figma 실측). 두 토큰은 지금 같은 값이지만 바인딩된 이름을 그대로 따른다 —
+    /// 값으로 묶어 버리면 디자이너가 한쪽을 바꿔도 코드가 따라가지 않는다.
+    /// normal 만 원시 토큰인 것이 의도인지는 디자이너 확인 사항이다 (docs/naming-contract.md §6).
+    private var labelColor: Color {
+        state == .normal ? theme.semantic.colorFontNeutral6 : theme.component.inputLineLabel
+    }
+
     /// Figma 는 helper 색을 `invalid` / `valid` 에만 정의한다.
     /// 나머지 상태에서 helper 를 띄우면 라벨과 같은 색으로 둔다 — 디자인에 근거가 없는 자리다.
     private var helperColor: Color {
@@ -122,11 +130,9 @@ public struct BCPLineTextField: View {
     public var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             if let label {
-                // Figma 의 `normal` 만 라벨에 원시 `color/font/neutral/6` 을 물려 뒀는데,
-                // `input/line/label` 과 값이 라이트·다크 모두 동일하다. 컴포넌트 토큰으로 통일한다.
                 Text(label)
                     .bcpTextStyle(BCPTypography.font1Paragraph6_2)
-                    .foregroundColor(theme.component.inputLineLabel)
+                    .foregroundColor(labelColor)
             }
 
             VStack(alignment: .leading, spacing: BCPDimens.spacing6) {
