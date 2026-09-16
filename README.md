@@ -52,6 +52,45 @@ codeconnect/        Figma Code Connect 템플릿 (*.figma.ts)
 figma.config.json   label: SwiftUI
 ```
 
+## 접근성
+
+컴포넌트는 **역할·상태·동작**(trait / value / action)을 스스로 제공한다. 아이콘 전용
+요소에는 이름도 들어 있다(`BCPScrollToTopButton` → "맨 위로", 지우기 버튼 → "지우기").
+장식용 아이콘은 `accessibilityHidden` 으로 빼 두어 VoiceOver 가 중복해서 읽지 않는다.
+
+### 이름을 반드시 붙여야 하는 것
+
+`BCPCheckbox` · `BCPRadioButton` · `BCPToggle` 은 **도형만으로 이루어져 있어** 무엇에 대한
+컨트롤인지 컴포넌트가 알 수 없다. 호출부가 이름을 준다.
+
+```swift
+BCPCheckbox(checked: agreed) { agreed = $0 }
+    .accessibilityLabel("이용약관 동의")      // 없으면 VoiceOver 가 "선택 안 함, 버튼" 만 읽는다
+
+BCPToggle(isOn: pushOn) { pushOn = $0 }
+    .accessibilityLabel("푸시 알림")
+```
+
+상태는 컴포넌트가 알린다 — 체크박스·라디오는 `선택됨`/`선택 안 함`, 토글은 `켜짐`/`꺼짐` 이
+값으로 읽히고, 토글에는 "켜기"/"끄기" 사용자 동작도 붙어 있다.
+
+### 입력 필드
+
+`placeholder` 가 필드 이름이 된다. `BCPLineTextField` 는 `label` 을 주면 그쪽이 이름이다
+(더 구체적이므로). helper text 와 오류 상태는 힌트로 이어 읽힌다 — `validation: .invalid`
+이면 "오류" 를 먼저 말한다. 색만으로는 전달되지 않기 때문이다.
+
+`dropdown` · `date` 는 값을 고르는 칸이라 텍스트 필드가 아니라 **버튼**으로 읽힌다.
+VoiceOver 사용자가 키보드를 기대하지 않도록 한 것이다.
+
+이름을 바꾸고 싶으면 바깥에서 `.accessibilityLabel(_:)` 을 붙이면 된다 — 그쪽이 이긴다.
+
+### 아직 안 된 것
+
+- **터치 타깃이 Apple 권장(44×44pt)보다 작다** — 체크박스 24pt(small 20pt), 라디오 24pt,
+  토글 높이 28pt. 키우면 주변 간격이 달라져 Figma 레이아웃과 어긋나므로 디자인 확인이 필요하다.
+- **Dynamic Type 미지원** — `BCPTextStyle` 이 고정 pt 를 쓴다. 글자 크기 설정을 따라가지 않는다.
+
 ## 직접 수정하지 말 것
 
 `Sources/BCPDesignSystem/Foundation/` 과 `BCPVectorPaths.swift`, 그리고

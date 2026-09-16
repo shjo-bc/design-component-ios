@@ -4,6 +4,45 @@
 **0.x 대에서는 공개 API 가 안정적이지 않다** — minor 가 아니라 patch 에서도 깨지는
 변경이 들어갈 수 있으므로, 올릴 때 이 문서를 먼저 확인할 것.
 
+## 0.1.8
+
+### 추가 — 접근성 (SwiftUI 전 컴포넌트)
+
+컴포넌트가 **역할·상태·동작**을 스스로 알리도록 일괄 적용했다. API 는 바뀌지 않는다.
+
+- **입력 필드에 이름이 생겼다.** `TextField("", text:)` 로 placeholder 를 직접 그리는 구조라
+  VoiceOver 가 "텍스트 필드" 라고만 말하고 무엇을 넣는 칸인지 알려주지 못했다. placeholder 를
+  이름으로 승격시키고, 겹쳐 그린 placeholder 는 중복해서 읽히지 않게 숨겼다.
+  `BCPLineTextField` 는 `label` 이 있으면 그쪽이 이름이다.
+- **helper text 와 오류가 필드에 이어 읽힌다.** `validation: .invalid` 면 "오류" 를 먼저 말한다 —
+  색만으로는 전달되지 않는다.
+- **`dropdown` · `date` 는 버튼으로 읽힌다.** 값을 고르는 칸이라 텍스트 필드로 읽히면
+  VoiceOver 사용자가 키보드를 기대하게 된다. 현재 선택값도 값으로 알린다.
+- **체크박스 · 라디오 · 토글이 하나의 조작 요소로 묶였다.** 도형만 있어 읽을 것이 없던 상태였다.
+  상태를 값으로 알리고(`선택됨`/`켜짐` 등), 토글에는 "켜기"/"끄기" 사용자 동작을 붙였다.
+- **장식 아이콘을 숨겼다.** `BCPButton` 의 leading/trailing 아이콘, `BCPArrowButton` 의 화살표,
+  검색 돋보기. 그대로 두면 "이미지, 확인, 버튼" 처럼 들린다.
+- **아이콘 전용 버튼에 이름을 줬다.** `BCPScrollToTopButton` → "맨 위로".
+
+### 호출부가 해야 할 일
+
+`BCPCheckbox` · `BCPRadioButton` · `BCPToggle` 은 **무엇에 대한 컨트롤인지 컴포넌트가 알 수
+없다.** 이름을 붙여야 한다 (없으면 "선택 안 함, 버튼" 만 읽힌다).
+
+```swift
+BCPCheckbox(checked: agreed) { agreed = $0 }
+    .accessibilityLabel("이용약관 동의")
+```
+
+다른 컴포넌트도 바깥에서 `.accessibilityLabel(_:)` 을 붙이면 그쪽이 이긴다.
+
+### 아직 안 된 것
+
+- **터치 타깃이 Apple 권장(44×44pt)보다 작다** — 체크박스 24pt(small 20pt), 라디오 24pt,
+  토글 높이 28pt. 키우면 주변 간격이 달라져 Figma 레이아웃과 어긋나므로 디자인 확인이 필요하다.
+- **Dynamic Type 미지원** — `BCPTextStyle` 이 고정 pt 를 쓴다.
+- VoiceOver 로 실제 읽어 본 검증은 하지 않았다. 코드상 semantics 만 맞춘 상태다.
+
 ## 0.1.7
 
 ### 고침

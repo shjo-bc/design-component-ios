@@ -228,9 +228,12 @@ public struct BCPButton: View {
         let m = size.metrics
         return Button(action: action) {
             HStack(spacing: m.gap) {
+                // 아이콘은 장식이다 — 버튼 이름은 title 이 맡는다. 숨기지 않으면 VoiceOver 가
+                // 에셋 이름까지 읽어 "이미지, 확인, 버튼" 처럼 들린다.
                 leadingIcon?
                     .resizable()
                     .frame(width: BCPButtonIconSize.leading, height: BCPButtonIconSize.leading)
+                    .accessibilityHidden(true)
                 Text(title)
                     .bcpTextStyle(m.textStyle)
                     .lineLimit(1)
@@ -238,6 +241,7 @@ public struct BCPButton: View {
                 trailingIcon?
                     .resizable()
                     .frame(width: BCPButtonIconSize.trailing, height: BCPButtonIconSize.trailing)
+                    .accessibilityHidden(true)
             }
         }
         .buttonStyle(

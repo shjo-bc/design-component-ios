@@ -70,6 +70,7 @@ public struct BCPTextField: View {
                 .foregroundColor(textColor)
                 .focused(focus)
                 .frame(height: multilineHeight)
+                .bcpFieldAccessibilityName(placeholder)
         } else {
             // `prompt:` 를 쓰지 않는다 — SwiftUI 가 prompt 를 자체 스타일로 그려서
             // `.foregroundColor` 가 반영되지 않는다. 그러면 iOS 만 시스템 회색으로 뜨고
@@ -85,8 +86,12 @@ public struct BCPTextField: View {
                             .bcpTextStyle(textStyle)
                             .foregroundColor(placeholderColor)
                             .allowsHitTesting(false)
+                            // 겹쳐 그린 placeholder 가 필드와 별개 요소로 읽히면
+                            // VoiceOver 가 같은 문구를 두 번 말한다. 아래에서 필드 이름으로 쓴다.
+                            .accessibilityHidden(true)
                     }
                 }
+                .bcpFieldAccessibilityName(placeholder)
         }
     }
 }
@@ -104,6 +109,22 @@ struct BCPInputClearButton: View {
         }
         .buttonStyle(.plain)
         .accessibilityLabel("지우기")
+    }
+}
+
+// MARK: - 접근성
+
+extension View {
+    /// 입력 필드에 VoiceOver 가 읽을 이름을 준다.
+    ///
+    /// `TextField("", text:)` 로 placeholder 를 직접 그리기 때문에 SwiftUI 가 붙여 주는
+    /// 이름이 없다 — 그대로 두면 VoiceOver 가 "텍스트 필드" 라고만 말하고 무엇을 넣는
+    /// 칸인지 알려주지 못한다. 겹쳐 그린 placeholder 를 이름으로 승격시킨다.
+    ///
+    /// 호출부가 바깥에서 `.accessibilityLabel(_:)` 을 붙이면 그쪽이 이긴다.
+    @ViewBuilder
+    func bcpFieldAccessibilityName(_ name: String) -> some View {
+        if name.isEmpty { self } else { accessibilityLabel(name) }
     }
 }
 

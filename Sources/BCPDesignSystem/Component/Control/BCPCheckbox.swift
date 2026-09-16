@@ -64,6 +64,13 @@ public struct BCPCheckbox: View {
             )
             .contentShape(Rectangle())
             .onTapGesture { if isEnabled { onChange?(!checked) } }
+            // 도형만으로 이루어져 있어 그대로 두면 VoiceOver 가 읽을 것이 없다.
+            // 하나의 조작 가능한 요소로 묶고 상태를 값으로 알린다.
+            //
+            // **이름은 호출부 책임이다** — 무엇에 대한 체크박스인지는 여기서 알 수 없다.
+            // 호출부가 `.accessibilityLabel("약관 동의")` 를 붙이면 그쪽이 이긴다.
+            .accessibilityElement()
             .accessibilityAddTraits(checked ? [.isButton, .isSelected] : .isButton)
+            .accessibilityValue(checked ? "선택됨" : "선택 안 함")
     }
 }

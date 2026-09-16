@@ -41,7 +41,12 @@ public struct BCPToggle: View {
         .animation(.easeInOut(duration: 0.15), value: isOn)
         .contentShape(Rectangle())
         .onTapGesture { if isEnabled { onChange?(!isOn) } }
+        // 도형만으로 이루어져 있어 그대로 두면 VoiceOver 가 읽을 것이 없다.
+        // 이름은 호출부 책임이다 — `.accessibilityLabel(_:)` 로 붙인다.
+        .accessibilityElement()
         .accessibilityAddTraits(.isButton)
         .accessibilityValue(isOn ? "켜짐" : "꺼짐")
+        // VoiceOver 로 "켜기/끄기" 를 직접 부를 수 있게 한다. 더블탭과 같은 동작이다.
+        .accessibilityAction(named: isOn ? "끄기" : "켜기") { if isEnabled { onChange?(!isOn) } }
     }
 }

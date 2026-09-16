@@ -38,6 +38,10 @@ public struct BCPRadioButton: View {
             )
             .contentShape(Circle())
             .onTapGesture { if isEnabled { onSelect?() } }
+            // 도형만으로 이루어져 있어 그대로 두면 VoiceOver 가 읽을 것이 없다.
+            // 이름은 호출부 책임이다 — `.accessibilityLabel(_:)` 로 붙인다.
+            .accessibilityElement()
             .accessibilityAddTraits(selected ? [.isButton, .isSelected] : .isButton)
+            .accessibilityValue(selected ? "선택됨" : "선택 안 함")
     }
 }

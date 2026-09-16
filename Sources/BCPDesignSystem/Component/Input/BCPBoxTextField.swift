@@ -261,6 +261,11 @@ public struct BCPBoxTextField: View {
                 .bcpTextStyle(inputTextStyle)
                 .foregroundColor(textColor)
                 .frame(maxWidth: .infinity, alignment: .leading)
+                // 값을 고르는 칸이다 — 편집 가능한 텍스트 필드가 아니라 버튼으로 읽혀야
+                // VoiceOver 사용자가 키보드를 기대하지 않는다.
+                .accessibilityAddTraits(.isButton)
+                .accessibilityLabel(placeholder)
+                .accessibilityValue(value.isEmpty ? "선택 안 함" : value)
         } else {
             BCPTextField(
                 text: editingBinding,
@@ -358,11 +363,24 @@ public struct BCPBoxTextField: View {
         }
     }
 
+    /// VoiceOver 가 필드에 이어서 읽을 보조 설명.
+    ///
+    /// helper text 는 화면상 별도 줄이지만 필드와 떨어져 읽히면 무엇에 대한 설명인지
+    /// 알 수 없다. 오류일 때는 그 사실을 먼저 알린다 — 색만으로는 전달되지 않는다.
+    private var accessibilityHintText: String? {
+        var parts: [String] = []
+        if state == .invalid { parts.append("오류") }
+        if let helperText, !helperText.isEmpty { parts.append(helperText) }
+        return parts.isEmpty ? nil : parts.joined(separator: ", ")
+    }
+
     public var body: some View {
         VStack(alignment: .leading, spacing: BCPDimens.spacing10) {
             box
             infoRow
         }
+        .accessibilityElement(children: .contain)
+        .accessibilityHint(accessibilityHintText ?? "")
         .contentShape(Rectangle())
         .onTapGesture {
             guard isEnabled else { return }

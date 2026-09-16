@@ -25,6 +25,8 @@ public struct BCPScrollToTopButton: View {
             Color.clear.frame(width: Self.box, height: Self.box)
         }
         .buttonStyle(BCPScrollToTopStyle(theme: theme))
+        // 라벨이 Color.clear 라 SwiftUI 가 읽을 텍스트가 없다 — 이름을 직접 준다.
+        .accessibilityLabel("맨 위로")
     }
 }
 

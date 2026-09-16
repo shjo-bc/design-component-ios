@@ -85,11 +85,13 @@ public struct BCPArrowButton: View {
                 Text(title)
                     .bcpTextStyle(size.textStyle)
                     .foregroundColor(tint)
+                // 화살표는 장식이다 — 버튼 이름은 title 이 맡는다.
                 BCPVectorShape(BCPVectorPaths.chevronRight)
                     .fill(tint)
                     .frame(width: glyph.width, height: glyph.height)
                     .rotationEffect(direction.rotation)
                     .frame(width: box, height: box)
+                    .accessibilityHidden(true)
             }
             .fixedSize()
         }

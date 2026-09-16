@@ -88,9 +88,14 @@ public struct BCPSearchBar: View {
                     textColor: textColor,
                     placeholderColor: hintColor
                 )
+                // placeholder 가 비어 있어도 검색 칸이라는 것은 알려야 한다.
+                .bcpFieldAccessibilityName(placeholder.isEmpty ? "검색" : placeholder)
+                .accessibilityAddTraits(.isSearchField)
                 BCPVectorShape(BCPVectorPaths.searchGlass)
                     .fill(theme.semantic.colorSurface9)
                     .frame(width: 20, height: 20)
+                    // 장식이다 — 옆의 입력 필드가 이미 "검색" 이라고 알린다.
+                    .accessibilityHidden(true)
             }
             .padding(.horizontal, BCPDimens.spacing18)
             .padding(.vertical, BCPDimens.spacing15)

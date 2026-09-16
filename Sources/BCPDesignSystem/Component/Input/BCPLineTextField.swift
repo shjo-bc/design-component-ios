@@ -121,6 +121,17 @@ public struct BCPLineTextField: View {
 
     private var showsClearButton: Bool { type.isEditable && state == .typing }
 
+    /// VoiceOver 가 필드에 이어서 읽을 보조 설명.
+    ///
+    /// helper text 는 화면상 별도 줄이지만 필드와 떨어져 읽히면 무엇에 대한 설명인지
+    /// 알 수 없다. 오류일 때는 그 사실을 먼저 알린다 — 색만으로는 전달되지 않는다.
+    private var accessibilityHintText: String? {
+        var parts: [String] = []
+        if state == .invalid { parts.append("오류") }
+        if let helperText, !helperText.isEmpty { parts.append(helperText) }
+        return parts.isEmpty ? nil : parts.joined(separator: ", ")
+    }
+
     /// Figma 는 dropdown 의 chevron 에 `input/line/focused/line` 을 물려 뒀다 —
     /// 밑줄과 같은 색 계열이다. disabled 만 semantic 표면 토큰으로 빠진다.
     private var chevronColor: Color {
@@ -133,6 +144,8 @@ public struct BCPLineTextField: View {
                 Text(label)
                     .bcpTextStyle(BCPTypography.font1Paragraph6_2)
                     .foregroundColor(labelColor)
+                    // 라벨은 아래 입력 필드의 이름으로 다시 읽힌다. 따로 읽으면 중복이다.
+                    .accessibilityHidden(true)
             }
 
             VStack(alignment: .leading, spacing: BCPDimens.spacing6) {
@@ -142,6 +155,11 @@ public struct BCPLineTextField: View {
                             .bcpTextStyle(BCPTypography.font1Subheading3_1)
                             .foregroundColor(textColor)
                             .frame(maxWidth: .infinity, alignment: .leading)
+                            // 값을 고르는 칸이다 — 편집 가능한 텍스트 필드가 아니라 버튼으로 읽혀야
+                            // VoiceOver 사용자가 키보드를 기대하지 않는다.
+                            .accessibilityAddTraits(.isButton)
+                            .accessibilityLabel(label ?? placeholder)
+                            .accessibilityValue(value.isEmpty ? "선택 안 함" : value)
                         BCPVectorShape(BCPVectorPaths.chevronDown)
                             .fill(chevronColor)
                             .frame(width: 20, height: 20)
@@ -154,6 +172,8 @@ public struct BCPLineTextField: View {
                         textColor: textColor,
                         placeholderColor: placeholderColor
                     )
+                    // 라벨이 있으면 그쪽이 필드 이름이다 (placeholder 보다 구체적이다).
+                    .bcpFieldAccessibilityName(label ?? "")
                     }
                     if showsClearButton {
                         // Figma 의 아이콘 색은 Variable 이 걸려 있지 않다(#8f96a0).
@@ -176,6 +196,8 @@ public struct BCPLineTextField: View {
                     .padding(.top, BCPDimens.spacing6)
             }
         }
+        .accessibilityElement(children: .contain)
+        .accessibilityHint(accessibilityHintText ?? "")
         .contentShape(Rectangle())
         .onTapGesture {
             guard isEnabled else { return }
