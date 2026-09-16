@@ -52,6 +52,15 @@ codeconnect/        Figma Code Connect 템플릿 (*.figma.ts)
 figma.config.json   label: SwiftUI
 ```
 
+## 갤러리 앱으로 확인하기
+
+```bash
+open Examples/BCPGallery/Package.swift   # Xcode → ⌘R
+```
+
+모든 컴포넌트의 변형을 한 화면에 늘어놓고 라이트/다크를 전환해 볼 수 있다.
+자세한 내용은 [`Examples/BCPGallery/README.md`](Examples/BCPGallery/README.md) 를 본다.
+
 ## 접근성
 
 컴포넌트는 **역할·상태·동작**(trait / value / action)을 스스로 제공한다. 아이콘 전용
