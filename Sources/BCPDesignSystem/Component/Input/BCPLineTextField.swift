@@ -25,21 +25,22 @@ public struct BCPLineTextField: View {
     private let onTap: (() -> Void)?
     @Binding private var value: String
 
-    /// 호출부가 포커스를 쥐지 않을 때 쓰는 내부 상태.
-    @FocusState private var internalFocus: Bool
-    private let externalFocus: FocusState<Bool>.Binding?
+    /// 포커스는 항상 여기가 쥔다 — `@FocusState` 는 선언한 뷰에서만 값 변화로 재렌더를 일으킨다.
+    /// 바깥 `FocusState` 를 그대로 읽으면 이 뷰가 무효화되지 않아 밑줄·clear 버튼이 상태를 따라가지 못한다.
+    @FocusState private var isFocused: Bool
+    private let externalFocus: Binding<Bool>?
     @Environment(\.bcpTheme) private var theme
     @Environment(\.isEnabled) private var isEnabled
 
     /// `label` / `helperText` 가 `nil` 이면 그 줄이 사라진다.
     /// Figma 의 `show label` / `show helpertxt` 불리언에 대응한다.
     ///
-    /// `focus` 를 넘기면 호출부가 포커스를 쥔다 — 화면 진입 직후 자동 포커스처럼
-    /// 바깥 사정으로 포커스를 옮겨야 할 때 쓴다. 넘기지 않으면 내부 상태로 동작한다.
+    /// `focus` 를 넘기면 호출부가 포커스를 읽고 쓸 수 있다 — 화면 진입 직후 자동 포커스처럼
+    /// 바깥 사정으로 포커스를 옮겨야 할 때 쓴다. 넘기지 않으면 내부 상태로만 동작한다.
     public init(
         text: Binding<String>,
         type: BCPLineTextFieldType = .basic,
-        focus: FocusState<Bool>.Binding? = nil,
+        focus: Binding<Bool>? = nil,
         label: String? = nil,
         placeholder: String = "",
         helperText: String? = nil,
@@ -56,14 +57,12 @@ public struct BCPLineTextField: View {
         self.onTap = onTap
     }
 
-    private var focus: FocusState<Bool>.Binding { externalFocus ?? $internalFocus }
-
     private var state: BCPInputState {
         // dropdown 은 키보드 포커스를 잡지 않으므로 focused·typing 이 나오지 않는다.
         .resolve(
             enabled: isEnabled,
             validation: validation,
-            focused: type.isEditable && focus.wrappedValue,
+            focused: type.isEditable && isFocused,
             isEmpty: value.isEmpty
         )
     }
@@ -143,7 +142,7 @@ public struct BCPLineTextField: View {
                     } else {
                     BCPTextField(
                         text: $value,
-                        focus: focus,
+                        focus: $isFocused,
                         placeholder: placeholder,
                         textStyle: BCPTypography.font1Subheading3_1,
                         textColor: textColor,
@@ -174,8 +173,16 @@ public struct BCPLineTextField: View {
         .contentShape(Rectangle())
         .onTapGesture {
             guard isEnabled else { return }
-            if type.isEditable { focus.wrappedValue = true }
+            if type.isEditable { isFocused = true }
             onTap?()
+        }
+        .onChange(of: isFocused) { focused in
+            guard let externalFocus, externalFocus.wrappedValue != focused else { return }
+            externalFocus.wrappedValue = focused
+        }
+        .onChange(of: externalFocus?.wrappedValue ?? false) { focused in
+            guard externalFocus != nil, isFocused != focused else { return }
+            isFocused = focused
         }
     }
 }

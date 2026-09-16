@@ -4,6 +4,29 @@
 **0.x 대에서는 공개 API 가 안정적이지 않다** — minor 가 아니라 patch 에서도 깨지는
 변경이 들어갈 수 있으므로, 올릴 때 이 문서를 먼저 확인할 것.
 
+## 0.1.5
+
+### ⚠️ 깨지는 변경
+
+- `BCPLineTextField` 의 `focus` 파라미터 타입이 `FocusState<Bool>.Binding?` → **`Binding<Bool>?`** 로
+  바뀌었다. 호출부는 `@FocusState` 대신 `@State` 를 쓴다.
+
+  ```swift
+  // 0.1.4
+  @FocusState private var isFocused: Bool
+  // 0.1.5
+  @State private var isFocused = false
+
+  BCPLineTextField(text: $text, focus: $isFocused, label: "이메일")
+  ```
+
+### 고침
+
+- 0.1.4 에서 외부 `focus` 를 넘기면 포커스 상태가 화면에 반영되지 않던 문제. `@FocusState` 는
+  선언한 뷰에서만 값 변화로 재렌더를 일으키는데, 바깥 `FocusState` 를 그대로 읽는 구조라
+  컴포넌트가 무효화되지 않았다. 밑줄 색이 `focused` 로 바뀌지 않고 지우기 버튼도 나타나지
+  않았다. 포커스는 컴포넌트가 쥐고 외부 `Binding` 과 양방향 동기화하도록 고쳤다.
+
 ## 0.1.4
 
 ### 추가
