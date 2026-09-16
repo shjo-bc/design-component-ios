@@ -197,6 +197,20 @@ public struct BCPBoxTextField: View {
         }
     }
 
+    /// placeholder 는 값이 비어 있을 때만 보인다.
+    ///
+    /// Figma 가 그 상태를 그려 둔 것은 `normal` 과 `focused` 둘뿐이다 — 나머지 state 는
+    /// 값이 들어 있는 모습으로 디자인돼 있어 placeholder 색의 근거가 없다.
+    /// 근거 없는 자리는 `normal` 의 hint 톤으로 떨어뜨린다. 그러지 않고 본문 색을 그대로
+    /// 쓰면 `invalid` 에서 placeholder 가 진한 검정으로 나와 **이미 입력된 값처럼 보인다.**
+    private var placeholderColor: Color {
+        let c = theme.component
+        switch state {
+        case .focused: return c.inputBasicFocusedText
+        default: return c.inputBasicNormalText
+        }
+    }
+
     private var helperColor: Color {
         let c = theme.component
         switch state {
@@ -292,7 +306,7 @@ public struct BCPBoxTextField: View {
                 placeholder: placeholder,
                 textStyle: inputTextStyle,
                 textColor: textColor,
-                placeholderColor: textColor,
+                placeholderColor: placeholderColor,
                 multilineHeight: type == .multiline ? 110 : nil
             )
         }
