@@ -17,14 +17,26 @@ struct GalleryApp: App {
 /// 라이트/다크를 한 화면에서 바꿔가며 볼 수 있어야 한다 —
 /// 토큰이 모드별로 다르게 해석되므로 한쪽만 보면 절반만 확인하는 셈이다.
 struct GalleryRoot: View {
-    @State private var scheme: ColorScheme = .light
+    @State private var scheme: ColorScheme
+    @State private var tab: Int
+
+    /// 실행 인자로 초기 탭과 모드를 정할 수 있다 — `simctl launch` 로 화면을 찍을 때
+    /// 손으로 탭을 옮기지 않고 원하는 페이지를 바로 띄우기 위한 것이다.
+    ///
+    ///     xcrun simctl launch <dev> <bundleId> --args --tab=inputs --dark
+    init() {
+        let args = ProcessInfo.processInfo.arguments
+        _tab = State(initialValue: args.contains("--tab=controls") ? 1
+                                 : args.contains("--tab=inputs") ? 2 : 0)
+        _scheme = State(initialValue: args.contains("--dark") ? .dark : .light)
+    }
 
     var body: some View {
         NavigationView {
-            TabView {
-                ButtonsPage().tabItem { Label("Buttons", systemImage: "rectangle.and.hand.point.up.left") }
-                ControlsPage().tabItem { Label("Controls", systemImage: "switch.2") }
-                InputsPage().tabItem { Label("Inputs", systemImage: "character.cursor.ibeam") }
+            TabView(selection: $tab) {
+                ButtonsPage().tabItem { Label("Buttons", systemImage: "rectangle.and.hand.point.up.left") }.tag(0)
+                ControlsPage().tabItem { Label("Controls", systemImage: "switch.2") }.tag(1)
+                InputsPage().tabItem { Label("Inputs", systemImage: "character.cursor.ibeam") }.tag(2)
             }
             .navigationTitle("BCP Design System")
             .navigationBarTitleDisplayMode(.inline)
@@ -75,12 +87,31 @@ struct Section<Content: View>: View {
 struct Page<Content: View>: View {
     @ViewBuilder let content: () -> Content
 
+    /// `--scroll=<id>` 로 특정 섹션까지 내려간 상태로 띄운다.
+    /// 화면을 손으로 스크롤하지 않고 원하는 부분을 찍기 위한 것이다.
+    private var anchor: String? {
+        ProcessInfo.processInfo.arguments
+            .first { $0.hasPrefix("--scroll=") }?
+            .replacingOccurrences(of: "--scroll=", with: "")
+    }
+
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                content()
+        ScrollViewReader { proxy in
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    content()
+                }
+                .padding(16)
+                // 탭 바가 마지막 항목을 가리지 않도록 아래를 넉넉히 비운다.
+                .padding(.bottom, 80)
             }
-            .padding(16)
+            .onAppear {
+                guard let anchor else { return }
+                // 레이아웃이 잡힌 뒤에 옮겨야 정확한 위치로 간다.
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    proxy.scrollTo(anchor, anchor: .top)
+                }
+            }
         }
     }
 }

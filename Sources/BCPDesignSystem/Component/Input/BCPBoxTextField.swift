@@ -39,6 +39,25 @@ public enum BCPBoxTextFieldType: Sendable {
         default: return nil
         }
     }
+
+    /// 벡터가 그려질 실제 크기. **viewBox 비율과 같아야 한다.**
+    ///
+    /// `BCPVectorShape` 는 x·y 를 따로 늘리므로 비율이 다른 상자에 넣으면 모양이 찌그러진다 —
+    /// 12×7 짜리 chevron 을 20×20 에 넣었더니 세로로 2.9배 늘어나 오른쪽 화살표처럼 보였다.
+    /// 자리는 Figma 의 인스턴스 크기(20×20)를 유지하고 그 안에 실제 크기로 그린다.
+    var trailingIconSize: CGSize? {
+        switch self {
+        case .dropdown: return CGSize(width: 8, height: 12)
+        case .date: return CGSize(width: 17, height: 17)
+        default: return nil
+        }
+    }
+
+    /// Figma 에서 이 아이콘 노드에 걸린 회전. `chevronDown` 은 경로 자체가 오른쪽 방향이고
+    /// 노드가 90° 돌아가 아래를 가리킨다 — 경로는 회전 전 모양이라 코드에서 돌려야 한다.
+    var trailingIconRotation: Angle {
+        self == .dropdown ? .degrees(90) : .zero
+    }
 }
 
 /// 페이북 디자인 시스템 box 입력 필드.
@@ -311,9 +330,11 @@ public struct BCPBoxTextField: View {
             if type == .number, let buttonTitle {
                 BCPButton(buttonTitle, type: .primary, size: .large, width: .hug) { onButtonTap?() }
             }
-            if let icon = type.trailingIcon {
+            if let icon = type.trailingIcon, let iconSize = type.trailingIconSize {
                 BCPVectorShape(icon)
                     .fill(trailingIconColor)
+                    .frame(width: iconSize.width, height: iconSize.height)
+                    .rotationEffect(type.trailingIconRotation)
                     .frame(width: 20, height: 20)
             }
         }

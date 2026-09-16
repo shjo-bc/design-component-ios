@@ -160,8 +160,12 @@ public struct BCPLineTextField: View {
                             .accessibilityAddTraits(.isButton)
                             .accessibilityLabel(label ?? placeholder)
                             .accessibilityValue(value.isEmpty ? "선택 안 함" : value)
+                        // 경로는 오른쪽 방향(8×12)이고 Figma 노드가 90° 돌아가 아래를 가리킨다.
+                        // 자리는 Figma 의 인스턴스 크기(20×20)를 유지한다.
                         BCPVectorShape(BCPVectorPaths.chevronDown)
                             .fill(chevronColor)
+                            .frame(width: 8, height: 12)
+                            .rotationEffect(.degrees(90))
                             .frame(width: 20, height: 20)
                     } else {
                     BCPTextField(

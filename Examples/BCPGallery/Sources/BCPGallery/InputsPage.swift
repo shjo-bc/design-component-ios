@@ -26,6 +26,7 @@ struct InputsPage: View {
                     BCPBoxTextField(text: $multiline, type: .multiline, placeholder: "내용", maxLength: 1000)
                 }
             }
+            .id("box")
 
             Section("box — validation",
                     note: "오류 상태에서 탭해도 테두리가 두꺼워지는지 확인 (0.1.7 에서 고친 부분)") {
@@ -37,6 +38,7 @@ struct InputsPage: View {
                     BCPBoxTextField(text: $basic, placeholder: "비활성").disabled(true)
                 }
             }
+            .id("validation")
 
             Section("box — 금융 입력",
                     note: "카드번호는 4자리마다 끊긴다. 숫자 키패드가 안 뜨는 것은 알려진 한계다") {
@@ -47,6 +49,7 @@ struct InputsPage: View {
                     BCPBoxTextField(text: $amountLarge, type: .amountLarge, placeholder: "금액 입력", unit: "원")
                 }
             }
+            .id("finance")
 
             Section("box — 선택형", note: "텍스트 필드가 아니라 버튼으로 읽혀야 한다") {
                 VStack(spacing: 14) {
@@ -56,6 +59,7 @@ struct InputsPage: View {
                                     onTap: { date = date.isEmpty ? "2026.09.16" : "" })
                 }
             }
+            .id("select")
 
             Section("line", note: "밑줄 색이 포커스에 따라 바뀌는지 본다. 값이 있으면 지우기 버튼이 나온다") {
                 VStack(spacing: 20) {
@@ -69,6 +73,7 @@ struct InputsPage: View {
                     BCPLineTextField(text: $line, label: "비활성", placeholder: "Text").disabled(true)
                 }
             }
+            .id("line")
 
             Section("search", note: "두 스타일의 차이는 표면 색뿐이다") {
                 VStack(spacing: 14) {
@@ -79,6 +84,7 @@ struct InputsPage: View {
                 .background(Color.blue.opacity(0.15))
                 .cornerRadius(8)
             }
+            .id("search")
         }
     }
 }
