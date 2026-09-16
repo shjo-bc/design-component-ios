@@ -8,6 +8,22 @@ public enum BCPBoxTextFieldType: Sendable {
     case amount
     /// `box-input-basic` type=multiline — 높이가 고정되고 글자 수 카운터가 붙는다.
     case multiline
+    /// `box-input-dropdown` — 직접 입력하지 않고 목록에서 고른다. 오른쪽에 아래 방향 chevron 이 붙는다.
+    case dropdown
+    /// `box-input-date` — 날짜를 고른다. 오른쪽에 달력 아이콘이 붙는다.
+    case date
+
+    /// 사용자가 키보드로 고치는 종류인가. `dropdown` / `date` 는 값을 **표시만** 한다.
+    var isEditable: Bool { self != .dropdown && self != .date }
+
+    /// 오른쪽에 고정으로 붙는 아이콘. 입력 종류에는 없다(대신 값이 있을 때 clear 가 붙는다).
+    var trailingIcon: BCPVectorSource? {
+        switch self {
+        case .dropdown: return BCPVectorPaths.chevronDown
+        case .date: return BCPVectorPaths.calendar
+        default: return nil
+        }
+    }
 }
 
 /// 페이북 디자인 시스템 box 입력 필드.
@@ -24,6 +40,7 @@ public struct BCPBoxTextField: View {
     private let unit: String
     private let maxLength: Int?
     private let validation: BCPValidation
+    private let onTap: (() -> Void)?
     @Binding private var value: String
 
     @FocusState private var isFocused: Bool
@@ -37,7 +54,8 @@ public struct BCPBoxTextField: View {
         helperText: String? = nil,
         unit: String = "원",
         maxLength: Int? = nil,
-        validation: BCPValidation = .none
+        validation: BCPValidation = .none,
+        onTap: (() -> Void)? = nil
     ) {
         self._value = text
         self.type = type
@@ -46,10 +64,18 @@ public struct BCPBoxTextField: View {
         self.unit = unit
         self.maxLength = maxLength
         self.validation = validation
+        self.onTap = onTap
     }
 
     private var state: BCPInputState {
-        .resolve(enabled: isEnabled, validation: validation, focused: isFocused, isEmpty: value.isEmpty)
+        // dropdown / date 는 키보드 포커스를 잡지 않으므로 focused·typing 이 나오지 않는다.
+        // Figma 에도 그 variant 가 없다 (dropdown 의 focused 는 목록이 열린 상태다).
+        .resolve(
+            enabled: isEnabled,
+            validation: validation,
+            focused: type.isEditable && isFocused,
+            isEmpty: value.isEmpty
+        )
     }
 
     // MARK: - 토큰
@@ -121,19 +147,32 @@ public struct BCPBoxTextField: View {
         }
     }
 
+    /// 고정 아이콘 색은 컴포넌트 토큰이 아니라 semantic 표면 토큰에 걸려 있다 (Figma 실측).
+    private var trailingIconColor: Color {
+        state == .disabled ? theme.semantic.colorSurface7 : theme.semantic.colorSurface17
+    }
+
     // MARK: - 조각
 
-    private var showsClearButton: Bool { state == .typing }
+    private var showsClearButton: Bool { type.isEditable && state == .typing }
 
+    @ViewBuilder
     private var field: some View {
-        BCPTextField(
-            text: $value,
-            focus: $isFocused,
-            placeholder: placeholder,
-            textColor: textColor,
-            placeholderColor: textColor,
-            multilineHeight: type == .multiline ? 110 : nil
-        )
+        if !type.isEditable {
+            Text(value.isEmpty ? placeholder : value)
+                .bcpTextStyle(BCPTypography.font1Paragraph3_2)
+                .foregroundColor(textColor)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        } else {
+            BCPTextField(
+                text: $value,
+                focus: $isFocused,
+                placeholder: placeholder,
+                textColor: textColor,
+                placeholderColor: textColor,
+                multilineHeight: type == .multiline ? 110 : nil
+            )
+        }
     }
 
     /// 금액에 단위가 따라붙는 배치인가. Figma 에서 값이 비어 있으면 단위가 아예 없고
@@ -159,6 +198,11 @@ public struct BCPBoxTextField: View {
             }
             if showsClearButton {
                 BCPInputClearButton(color: theme.component.inputBasicTypingTextHelp) { value = "" }
+            }
+            if let icon = type.trailingIcon {
+                BCPVectorShape(icon)
+                    .fill(trailingIconColor)
+                    .frame(width: 20, height: 20)
             }
         }
         .padding(.horizontal, BCPDimens.spacing18)
@@ -212,6 +256,10 @@ public struct BCPBoxTextField: View {
             infoRow
         }
         .contentShape(Rectangle())
-        .onTapGesture { if isEnabled { isFocused = true } }
+        .onTapGesture {
+            guard isEnabled else { return }
+            if type.isEditable { isFocused = true }
+            onTap?()
+        }
     }
 }

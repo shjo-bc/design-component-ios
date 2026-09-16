@@ -6,11 +6,23 @@ import SwiftUI
 /// box 계열과 달리 위에 라벨이 붙고, 입력 글자가 20/700 으로 더 크다.
 ///
 /// `clear` 버튼은 box 와 같은 규칙 — 포커스 상태에서 값이 있을 때만(= Figma `typing`) 나타난다.
+/// line 계열 입력 필드의 종류. Figma `line-input-*` 세트들에 대응한다.
+public enum BCPLineTextFieldType: Sendable {
+    /// `line-input-basic` — 직접 입력한다.
+    case basic
+    /// `line-input-dropdown` — 목록에서 고른다. 밑줄 위 오른쪽에 아래 방향 chevron 이 붙는다.
+    case dropdown
+
+    var isEditable: Bool { self == .basic }
+}
+
 public struct BCPLineTextField: View {
+    private let type: BCPLineTextFieldType
     private let label: String?
     private let placeholder: String
     private let helperText: String?
     private let validation: BCPValidation
+    private let onTap: (() -> Void)?
     @Binding private var value: String
 
     @FocusState private var isFocused: Bool
@@ -21,20 +33,30 @@ public struct BCPLineTextField: View {
     /// Figma 의 `show label` / `show helpertxt` 불리언에 대응한다.
     public init(
         text: Binding<String>,
+        type: BCPLineTextFieldType = .basic,
         label: String? = nil,
         placeholder: String = "",
         helperText: String? = nil,
-        validation: BCPValidation = .none
+        validation: BCPValidation = .none,
+        onTap: (() -> Void)? = nil
     ) {
         self._value = text
+        self.type = type
         self.label = label
         self.placeholder = placeholder
         self.helperText = helperText
         self.validation = validation
+        self.onTap = onTap
     }
 
     private var state: BCPInputState {
-        .resolve(enabled: isEnabled, validation: validation, focused: isFocused, isEmpty: value.isEmpty)
+        // dropdown 은 키보드 포커스를 잡지 않으므로 focused·typing 이 나오지 않는다.
+        .resolve(
+            enabled: isEnabled,
+            validation: validation,
+            focused: type.isEditable && isFocused,
+            isEmpty: value.isEmpty
+        )
     }
 
     // MARK: - 토큰
@@ -81,7 +103,13 @@ public struct BCPLineTextField: View {
 
     // MARK: - 조각
 
-    private var showsClearButton: Bool { state == .typing }
+    private var showsClearButton: Bool { type.isEditable && state == .typing }
+
+    /// Figma 는 dropdown 의 chevron 에 `input/line/focused/line` 을 물려 뒀다 —
+    /// 밑줄과 같은 색 계열이다. disabled 만 semantic 표면 토큰으로 빠진다.
+    private var chevronColor: Color {
+        state == .disabled ? theme.semantic.colorSurface7 : theme.component.inputLineFocusedLine
+    }
 
     public var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -95,6 +123,15 @@ public struct BCPLineTextField: View {
 
             VStack(alignment: .leading, spacing: BCPDimens.spacing6) {
                 HStack(spacing: BCPDimens.spacing10) {
+                    if !type.isEditable {
+                        Text(value.isEmpty ? placeholder : value)
+                            .bcpTextStyle(BCPTypography.font1Subheading3_1)
+                            .foregroundColor(textColor)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        BCPVectorShape(BCPVectorPaths.chevronDown)
+                            .fill(chevronColor)
+                            .frame(width: 20, height: 20)
+                    } else {
                     BCPTextField(
                         text: $value,
                         focus: $isFocused,
@@ -103,6 +140,7 @@ public struct BCPLineTextField: View {
                         textColor: textColor,
                         placeholderColor: placeholderColor
                     )
+                    }
                     if showsClearButton {
                         // Figma 의 아이콘 색은 Variable 이 걸려 있지 않다(#8f96a0).
                         // 원시값을 코드에 박지 않고 가장 가까운 컴포넌트 토큰인 라벨 색을 쓴다.
@@ -125,6 +163,10 @@ public struct BCPLineTextField: View {
             }
         }
         .contentShape(Rectangle())
-        .onTapGesture { if isEnabled { isFocused = true } }
+        .onTapGesture {
+            guard isEnabled else { return }
+            if type.isEditable { isFocused = true }
+            onTap?()
+        }
     }
 }
