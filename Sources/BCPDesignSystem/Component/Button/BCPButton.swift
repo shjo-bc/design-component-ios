@@ -18,6 +18,10 @@ public enum BCPButtonType: Sendable {
 
     /// xxlarge 전용 — Figma `type=purple`, 토큰 `button/open-app/*`
     case openApp
+
+    /// 자동완성·필터 칩처럼 연한 채움 위에 gradient 텍스트를 얹는 배치.
+    /// 전용 버튼 세트가 아니라 `button/1` 표면 + `button/gradient/text/*` 조합이라 용도 기준으로 명명했다.
+    case chip
 }
 
 /// 버튼 크기. Figma 에서는 size 가 variant 축이 아니라 **컴포넌트 세트가 분리**되어 있고,
@@ -80,6 +84,14 @@ extension BCPButtonType {
             return BCPButtonPalette(
                 surface: enabled ? c.buttonOpenAppNormal : c.buttonOpenAppDisabled,
                 content: enabled ? c.buttonOpenAppTextNormal : c.buttonOpenAppTextDisabled,
+                border: nil
+            )
+        case .chip:
+            // 칩에는 disabled 표면 토큰이 없다. 같은 텍스트 계열인 gradient 가 표면을 그대로 두고
+            // 텍스트만 흐리는 방식(`gradient/normal` == `gradient/disabled`)이라 그 규칙을 따른다.
+            return BCPButtonPalette(
+                surface: c.button1,
+                content: enabled ? c.buttonGradientTextNormal : c.buttonGradientTextDisabled,
                 border: nil
             )
         }
