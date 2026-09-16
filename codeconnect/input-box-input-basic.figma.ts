@@ -1,6 +1,6 @@
 // url=https://www.figma.com/design/3ar2ONJR9DA46bKMhVQ6ZW/?node-id=1137-28940&m=dev
-// source=platforms/ios/Sources/BCPDesignSystem/Component/Input/BCPTextField.swift
-// component=BCPTextField
+// source=platforms/ios/Sources/BCPDesignSystem/Component/Input/BCPBoxTextField.swift
+// component=BCPBoxTextField
 
 // 자동 생성: node tools/scripts/gen-input-templates.mjs
 // Figma 세트 'box-input-basic' (1137:28940) · variant 42개
@@ -51,7 +51,7 @@ const disabledModifier = enabled ? '' : '\n.disabled(true)'
 
 export default {
   example: figma.code`
-BCPTextField(
+BCPBoxTextField(
     text: $text,
     type: ${type},
     placeholder: "${placeholder}"${helperLine}${unitLine}${maxLine}${validationLine}
