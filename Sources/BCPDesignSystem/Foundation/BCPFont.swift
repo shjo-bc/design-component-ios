@@ -19,7 +19,7 @@ public struct BCPTextStyle: Sendable, Equatable {
     }
 
     public var font: Font {
-        .custom(family, size: size).weight(BCPFont.weight(weight))
+        .custom(BCPFont.resolvedFamily(family), size: size).weight(BCPFont.weight(weight))
     }
 
     /// 같은 토큰의 `UIFont`. 줄간격 계산과 텍스트 폭 측정이 렌더와 같은 서체를 쓰게 한다.
@@ -33,6 +33,44 @@ public struct BCPTextStyle: Sendable, Equatable {
 }
 
 public enum BCPFont {
+    /// Figma 가 쓰는 서체 이름과 기기에 설치된 폰트의 **family 이름이 다를 수 있다.**
+    ///
+    /// 실측: 토큰은 `Gmarket Sans` 를 부르는데 페이북 앱이 번들에 넣은 파일의 family 는
+    /// `Gmarket Sans TTF` 다. 이름이 한 글자만 달라도 `Font.custom` 은 조용히 시스템
+    /// 폰트로 폴백한다 — 경고도 없어서 알아채기 어렵다.
+    ///
+    /// 토큰 값(= Figma 이름)은 그대로 두고 **읽는 시점에만** 실제 이름으로 바꾼다.
+    /// 후보 중 기기에 실제로 있는 것을 고르므로, 앱이 어느 판본을 넣었든 따라간다.
+    public static func resolvedFamily(_ family: String) -> String {
+        candidates(for: family).first { UIFont(name: $0, size: 12) != nil } ?? family
+    }
+
+    /// 같은 서체가 배포 판본에 따라 갖는 이름들. 첫 번째가 Figma 가 부르는 이름이다.
+    private static func candidates(for family: String) -> [String] {
+        switch family {
+        case "Gmarket Sans": return [family, "Gmarket Sans TTF", "GmarketSansTTF"]
+        default: return [family]
+        }
+    }
+
+    /// 토큰이 요구하는 서체가 기기에 있는지 확인한다.
+    ///
+    /// 없으면 레이아웃이 조용히 어긋난다(글자 폭이 달라져 줄바꿈·잘림·버튼 폭이 바뀐다).
+    /// 앱 시작 시 한 번 불러 두면 빠뜨린 것을 바로 알 수 있다.
+    /// - Returns: 찾지 못한 서체 이름들. 비어 있으면 전부 준비된 것이다.
+    @discardableResult
+    public static func missingFamilies() -> [String] {
+        let required = ["Pretendard", "Gmarket Sans"]
+        let missing = required.filter { UIFont(name: resolvedFamily($0), size: 12) == nil }
+        #if DEBUG
+        if !missing.isEmpty {
+            print("⚠️ BCPDesignSystem: 서체를 찾지 못했다 — \(missing.joined(separator: ", "))")
+            print("   앱 번들에 폰트를 넣고 UIAppFonts 또는 CTFontManagerRegisterFontsForURL 로 등록할 것.")
+            print("   등록하지 않으면 시스템 폰트로 그려져 디자인과 글자 폭이 달라진다.")
+        }
+        #endif
+        return missing
+    }
     /// 디자인 시스템이 쓰는 서체는 둘이다 — `font-1/…` Pretendard, `font-2/…` Gmarket Sans.
     /// 스타일마다 자기 서체를 들고 있으므로 전역 기본값은 두지 않는다.
     public static func weight(_ value: Int) -> Font.Weight {

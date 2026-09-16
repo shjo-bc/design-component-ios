@@ -35,7 +35,11 @@ let package = Package(
             // design-component-ios 를 독립 클론해서 열면 식별자가 디렉터리명을 따라가므로
             // 여기를 그 이름으로 바꿔야 한다.
             dependencies: [.product(name: "BCPDesignSystem", package: "ios")],
-            path: "Sources/BCPGallery"
+            path: "Sources/BCPGallery",
+            // 실제 앱(pybc-fe-ios)이 번들에 넣는 것과 같은 파일이다.
+            // 디자인과 대조하려면 서체가 같아야 한다 — 시스템 폰트로 폴백되면
+            // 글자 폭이 달라져 줄바꿈·잘림·버튼 폭이 전부 달라진다.
+            resources: [.process("Fonts")]
         )
     ]
 )

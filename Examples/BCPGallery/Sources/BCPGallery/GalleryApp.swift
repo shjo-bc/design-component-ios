@@ -7,6 +7,8 @@ import BCPDesignSystem
 /// 실제로 어떻게 그려지는지, 포커스·입력·토글이 어떻게 반응하는지는 여기서만 드러난다.
 @main
 struct GalleryApp: App {
+    init() { FontRegistration.register() }
+
     var body: some Scene {
         WindowGroup {
             GalleryRoot()

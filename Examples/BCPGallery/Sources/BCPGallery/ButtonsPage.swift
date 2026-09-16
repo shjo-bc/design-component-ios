@@ -77,6 +77,26 @@ struct ButtonsPage: View {
             Section("BCPScrollToTopButton", note: "아이콘 전용 — VoiceOver 는 \"맨 위로\" 라고 읽어야 한다") {
                 BCPScrollToTopButton {}
             }
+
+            Section("폰트 확인", note: "토큰이 부르는 이름으로 실제 폰트를 찾는지 본다. 시스템 폰트로 폴백되면 글자 폭이 달라진다") {
+                VStack(alignment: .leading, spacing: 10) {
+                    ForEach(["Pretendard", "Gmarket Sans"], id: \.self) { family in
+                        let resolved = BCPFont.resolvedFamily(family)
+                        let ok = UIFont(name: resolved, size: 17) != nil
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("\(ok ? "✅" : "❌") \(family)").font(.caption)
+                            if resolved != family {
+                                Text("   → 실제 이름 \"\(resolved)\" 로 해석됨").font(.caption2).foregroundColor(.secondary)
+                            }
+                            Text("다람쥐 헌 쳇바퀴에 타고파 123")
+                                .font(.custom(resolved, size: 17))
+                        }
+                    }
+                    Text("아래는 비교용 시스템 폰트").font(.caption2).foregroundColor(.secondary)
+                    Text("다람쥐 헌 쳇바퀴에 타고파 123").font(.system(size: 17))
+                }
+            }
+            .id("font")
         }
     }
 }

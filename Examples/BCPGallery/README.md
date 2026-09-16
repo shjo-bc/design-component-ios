@@ -47,3 +47,15 @@ xcodebuild -scheme BCPGallery -destination 'generic/platform=iOS Simulator' buil
 ⚠ path 의존성의 패키지 식별자는 **디렉터리 이름**이다. 이 저장소는 부모(design-component)에
 `platforms/ios` 로 마운트되므로 식별자가 `ios` 다. `design-component-ios` 를 독립 클론해서
 열면 `Package.swift` 의 `package:` 인자를 그 디렉터리 이름으로 바꿔야 한다.
+
+## 폰트
+
+`Sources/BCPGallery/Fonts/` 에 실제 앱(pybc-fe-ios)이 번들에 넣는 것과 **같은 파일**을 담고
+앱 시작 시 `CTFontManagerRegisterFontsForURL` 로 등록한다(`FontRegistration.swift`).
+
+디자인 시스템 모듈은 `Font.custom("Pretendard", …)` 로 **이름만 부른다** — 실제 폰트는 쓰는
+쪽이 등록해야 찾아진다. 등록이 없으면 SwiftUI 가 조용히 시스템 폰트로 폴백하고, 글자 폭이
+달라져 줄바꿈·잘림·버튼 폭이 전부 달라진다. 서체가 다르면 디자인 대조가 무의미하므로 갤러리는
+반드시 등록한다.
+
+Buttons 탭 맨 아래 **폰트 확인** 섹션에서 토큰 이름으로 실제 폰트를 찾는지 볼 수 있다.
