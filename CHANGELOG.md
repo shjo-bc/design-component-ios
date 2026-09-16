@@ -4,6 +4,17 @@
 **0.x 대에서는 공개 API 가 안정적이지 않다** — minor 가 아니라 patch 에서도 깨지는
 변경이 들어갈 수 있으므로, 올릴 때 이 문서를 먼저 확인할 것.
 
+## 0.1.6
+
+### 추가
+
+- `BCPButtonType.chip` — 연한 채움(`button/1`) 위에 gradient 텍스트를 얹는 칩 배치.
+  자동완성·필터 칩에 쓴다. `xsmall` 과 조합하면 높이 32 · 좌우 10 · radius 8 이다.
+
+  ```swift
+  BCPButton(domain, type: .chip, size: .xsmall) { ... }
+  ```
+
 ## 0.1.5
 
 ### ⚠️ 깨지는 변경
