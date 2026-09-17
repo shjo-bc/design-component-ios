@@ -17,9 +17,11 @@ Figma `Badges` 페이지를 구현했다. `Component/Badge/` 가 `.gitkeep` 만 
   자리라 문구는 호출부가 넘긴다.
 - **`BCPTermsBadge`** — Figma `badge-terms`. `level` 1~5. 등급 명칭(안심·다소안심·보통·신중·주의)은
   디자인이 정한 고정 문구라 컴포넌트가 갖는다.
-- **`BCPSmallBadge`** — Figma `badge-small`. `type` 3종(NEW·ON·OFF) × `style` 3종.
-  Figma 의 `color=light-mode`/`dark-mode` 축은 디자이너가 모드를 수동으로 바꿔 보는 것이라
-  코드에서는 `.neutral` 하나로 접었다 — 모드는 테마가 처리한다.
+- **`BCPSmallBadge`** — Figma `badge-small`. `type` 3종(NEW·ON·OFF) × `style` 2종.
+  `subtle` 은 옅은 바탕에 같은 계열 글자, `strong` 은 꽉 찬 바탕에 대비되는 글자다.
+  `style` 을 생략하면 Figma 기본 변형을 따른다 — NEW·ON 은 `subtle`, OFF 는 `strong`.
+  Figma 의 `color=light-mode`/`dark-mode` 축은 디자이너가 모드를 손으로 바꿔 보려고 둔 것이라
+  옮기지 않았다 — 두 변형이 부르는 토큰이 같고 모드는 테마가 처리한다.
 
 색은 생성된 `badge/1` ~ `badge/11` (surface + text 11쌍) 토큰 안에서 전부 해결된다.
 네 컴포넌트가 공유하는 내부 코어 `BCPBadge` 가 텍스트·색·패딩·radius 를 받아 그린다.
@@ -40,13 +42,21 @@ line-height 가 아니라 서체의 실제 행높이**(ascender + descender)다 
 
 - **statement large 의 타이포 토큰이 없다.** Pretendard 12/20 w700 을 쓰는데 `font-1/badge/*` 에는
   9pt 와 11pt 뿐이다. 파일 안 private 스타일로 실측값을 박아 두었다 — 토큰이 생기면 교체할 것.
-- **화면으로 대조하지 않았다.** 컴파일과 Preview 코드까지다. 0.1.9 에서 드러났듯 렌더 결과는
-  사람이 봐야 안다 — 갤러리 앱에 Badges 탭이 아직 없다.
+- **다크 모드를 화면으로 대조하지 않았다.** Xcode Preview 로 라이트 모드는 네 컴포넌트 모두
+  Figma 와 대조했다 — 위 `badge-small` 건이 그때 드러났다. 다크는 아직이고, 갤러리 앱에
+  Badges 탭도 없다. 0.1.9 에서 드러났듯 렌더 결과는 사람이 봐야 안다.
+- **서체가 실제와 다르게 보인다.** 패키지 Preview 는 Pretendard 를 번들에 넣지 않아 시스템
+  폰트로 떨어진다. 글자 폭이 달라 배지 가로 길이는 실제 앱과 다르다.
 
-### 유의
+### Figma 쪽에서 정리가 필요한 것
 
-`badge-homecard` 의 `company` variant 는 실제 이름 앞에 **백스페이스 문자(U+0008)** 가 붙어 있다.
-Code Connect 템플릿에서 철자를 그대로 맞추지 않으면 이 variant 만 매핑이 빈다.
+- **`badge-small` 의 옅은 회색 OFF 배지가 `type=new` 로 이름 붙어 있다**
+  (`color=light-mode` / `dark-mode`). 이름은 new 지만 실제로 그려지는 글자는 "OFF" 다.
+  코드에서는 `.off` 의 `subtle` 로 옮겼다. Preview 를 화면으로 대조하다 드러났다 —
+  그 전까지는 Figma 에 없는 "회색 NEW" 를 만들 수 있고 정작 옅은 회색 OFF 는 만들 수 없는
+  상태였다.
+- **`badge-homecard` 의 `company` variant 이름 앞에 백스페이스 문자(U+0008)가 붙어 있다.**
+  Code Connect 템플릿에서 철자를 그대로 맞추지 않으면 이 variant 만 매핑이 빈다.
 
 ## 0.1.9
 
