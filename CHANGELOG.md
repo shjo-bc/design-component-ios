@@ -52,15 +52,19 @@ line-height 가 아니라 서체의 실제 행높이**(ascender + descender)다 
   폰트로 떨어진다. 글자 폭이 달라 배지 가로 길이가 실제 앱과 다르다. 서체까지 보려면 갤러리
   앱에 Badges 탭이 필요한데 아직 없다.
 
-### Figma 쪽에서 정리가 필요한 것
+### Figma 를 그대로 따른 것
 
-- **`badge-small` 의 옅은 회색 OFF 배지가 `type=new` 로 이름 붙어 있다**
-  (`color=light-mode` / `dark-mode`). 이름은 new 지만 실제로 그려지는 글자는 "OFF" 다.
-  코드에서는 `.off` 의 `subtle` 로 옮겼다. Preview 를 화면으로 대조하다 드러났다 —
+디자인 파일은 건드리지 않는다. 코드가 맞춘다. 둘 다 이름과 실제가 어긋나 있어
+모르고 보면 틀리기 쉬운 자리다.
+
+- **`badge-small` 의 옅은 회색 OFF 배지는 변형 이름이 `type=new` 다**
+  (`color=light-mode` / `dark-mode`). 이름은 new 지만 그려지는 글자는 "OFF" 라서
+  코드에서는 `.off` 의 `subtle` 로 받는다. Preview 를 화면으로 대조하다 드러났다 —
   그 전까지는 Figma 에 없는 "회색 NEW" 를 만들 수 있고 정작 옅은 회색 OFF 는 만들 수 없는
   상태였다.
-- **`badge-homecard` 의 `company` variant 이름 앞에 백스페이스 문자(U+0008)가 붙어 있다.**
-  Code Connect 템플릿에서 철자를 그대로 맞추지 않으면 이 variant 만 매핑이 빈다.
+- **`badge-homecard` 의 `company` variant 이름 앞에 백스페이스 문자(U+0008)가 있다.**
+  눈에 보이지 않으므로 Code Connect 템플릿에서 철자를 그대로 맞춰야 한다 — 빠뜨리면
+  이 variant 만 매핑이 빈다.
 
 ## 0.1.9
 

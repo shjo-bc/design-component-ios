@@ -37,9 +37,9 @@ public enum BCPSmallBadgeStyle: Sendable {
 ///
 /// `style` 을 생략하면 Figma 의 기본 변형을 따른다 — NEW·ON 은 `subtle`, OFF 는 `strong` 이다.
 ///
-/// ⚠ Figma 에서 **옅은 회색 OFF 배지의 변형 이름이 `type=new`** 로 잘못 붙어 있다
+/// ⚠ Figma 에서 **옅은 회색 OFF 배지의 변형 이름은 `type=new`** 다
 /// (`color=light-mode` / `dark-mode`). 이름과 달리 그려지는 글자는 "OFF" 이므로 여기서는
-/// `.off` 의 `subtle` 로 옮겼다. Figma 쪽 이름을 정리하는 편이 맞아 보인다.
+/// `.off` 의 `subtle` 로 받는다. 이름만 보고 옮기면 이 변형을 놓친다.
 ///
 /// Figma 의 `color=light-mode` / `dark-mode` 축 자체는 디자이너가 모드를 손으로 바꿔 보려고
 /// 둔 것이라 코드에는 옮기지 않았다 — 두 변형이 부르는 토큰이 같고, 모드는 테마가 처리한다.
