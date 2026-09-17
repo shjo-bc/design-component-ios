@@ -4,6 +4,50 @@
 **0.x 대에서는 공개 API 가 안정적이지 않다** — minor 가 아니라 patch 에서도 깨지는
 변경이 들어갈 수 있으므로, 올릴 때 이 문서를 먼저 확인할 것.
 
+## 0.1.10
+
+### 추가 — Badge 계열 4종
+
+Figma `Badges` 페이지를 구현했다. `Component/Badge/` 가 `.gitkeep` 만 있던 자리다.
+
+- **`BCPStatementBadge`** — Figma `badge-statement`. `size` 2종 × `type` 17종. 타입은 색 역할만
+  정하고 **문구는 호출부가 넘긴다** — "가족"·"법인공용" 같은 업무 문구를 디자인 시스템이
+  소유하지 않기 위해서다. 타입별 Figma 기본 문구는 doc 주석의 표에 남겼다.
+- **`BCPHomeCardBadge`** — Figma `badge-homecard`. `type` 8종. "잔액"·"D-8" 처럼 데이터가 들어가는
+  자리라 문구는 호출부가 넘긴다.
+- **`BCPTermsBadge`** — Figma `badge-terms`. `level` 1~5. 등급 명칭(안심·다소안심·보통·신중·주의)은
+  디자인이 정한 고정 문구라 컴포넌트가 갖는다.
+- **`BCPSmallBadge`** — Figma `badge-small`. `type` 3종(NEW·ON·OFF) × `style` 3종.
+  Figma 의 `color=light-mode`/`dark-mode` 축은 디자이너가 모드를 수동으로 바꿔 보는 것이라
+  코드에서는 `.neutral` 하나로 접었다 — 모드는 테마가 처리한다.
+
+색은 생성된 `badge/1` ~ `badge/11` (surface + text 11쌍) 토큰 안에서 전부 해결된다.
+네 컴포넌트가 공유하는 내부 코어 `BCPBadge` 가 텍스트·색·패딩·radius 를 받아 그린다.
+
+Code Connect 템플릿 4개(`codeconnect/badge-*.figma.ts`)도 함께 넣었다. **이 4개는 수동 작성이다** —
+부모 저장소 생성기(`tools/scripts/gen-*.mjs`)에 배지가 아직 없다. 생성기에 들어가면 대체된다.
+
+### 높이를 패딩이 아니라 값으로 갖는다
+
+Figma 의 배지 높이는 `세로 패딩 + line-height` 다. 그런데 **SwiftUI 의 한 줄 `Text` 높이는
+line-height 가 아니라 서체의 실제 행높이**(ascender + descender)다 — 12pt Pretendard 면 20 이
+아니라 약 14 다. 패딩만 옮기면 statement large 가 24 가 아니라 18 로 나온다.
+
+그래서 `BCPBadge` 가 `minHeight` 를 받는다. `BCPButton` 이 높이를 따로 갖는 것과 같은 이유이고,
+고정이 아니라 최소값이라 문구가 길어지거나 서체가 폴백돼 커져도 잘리지 않는다.
+
+### 남은 것
+
+- **statement large 의 타이포 토큰이 없다.** Pretendard 12/20 w700 을 쓰는데 `font-1/badge/*` 에는
+  9pt 와 11pt 뿐이다. 파일 안 private 스타일로 실측값을 박아 두었다 — 토큰이 생기면 교체할 것.
+- **화면으로 대조하지 않았다.** 컴파일과 Preview 코드까지다. 0.1.9 에서 드러났듯 렌더 결과는
+  사람이 봐야 안다 — 갤러리 앱에 Badges 탭이 아직 없다.
+
+### 유의
+
+`badge-homecard` 의 `company` variant 는 실제 이름 앞에 **백스페이스 문자(U+0008)** 가 붙어 있다.
+Code Connect 템플릿에서 철자를 그대로 맞추지 않으면 이 variant 만 매핑이 빈다.
+
 ## 0.1.9
 
 **시뮬레이터에 띄워 화면으로 확인하면서 찾은 것들이다.** 아래 다섯 건 모두 컴파일·스니펫
