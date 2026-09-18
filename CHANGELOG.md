@@ -26,8 +26,22 @@ Figma `Badges` 페이지를 구현했다. `Component/Badge/` 가 `.gitkeep` 만 
 색은 생성된 `badge/1` ~ `badge/11` (surface + text 11쌍) 토큰 안에서 전부 해결된다.
 네 컴포넌트가 공유하는 내부 코어 `BCPBadge` 가 텍스트·색·패딩·radius 를 받아 그린다.
 
-Code Connect 템플릿 4개(`codeconnect/badge-*.figma.ts`)도 함께 넣었다. **이 4개는 수동 작성이다** —
-부모 저장소 생성기(`tools/scripts/gen-*.mjs`)에 배지가 아직 없다. 생성기에 들어가면 대체된다.
+Code Connect 템플릿은 **3개만** 넣었다(`badge-statement` · `badge-homecard` · `badge-terms`).
+**이 3개는 수동 작성이다** — 부모 저장소 생성기(`tools/scripts/gen-*.mjs`)에 배지가 아직 없다.
+생성기에 들어가면 대체된다.
+
+`badge-small` 은 뺐다. Figma 세트(`49409:14313`)의 자식 8개 중 `type=off`(`18103:10326`) 하나만
+`color` 축이 없어서, Figma 가 이 세트를 유효한 variant 세트로 확정하지 못한다 —
+REST 로 읽으면 `componentPropertyDefinitions` 가 통째로 `undefined` 다. Code Connect 의
+`getEnum()` 이 이 정의를 읽으므로 축이 하나도 풀리지 않고, 8개 variant 전부 `BCPSmallBadge()` 로
+렌더돼 컴파일되지 않는 스니펫이 Figma 에 붙는다. 조합이 빠진 것은 원인이 아니다 —
+`large`(`2046:6159`)는 192개 조합 중 96개만 있어도 정상이다. 깨뜨리는 것은 **프로퍼티 이름 불일치**뿐이다.
+
+디자이너가 `type=off` 를 `type=off, color=light-mode` 로 바꾸면 되살아난다(`naming-contract.md` §6).
+템플릿 자체는 바로 앞 커밋에서 고쳐 두었으므로 되돌리기만 하면 된다.
+**Swift 의 `BCPSmallBadge` 는 그대로 쓴다** — 네 색 쌍이 Figma 바인딩 토큰과 정확히 일치하는 것을
+확인했다(`badge/3`, `color/point/1`+`neutral/white`, `color/surface/4`+`neutral/7`,
+`color/surface/7`+`neutral/9`). 막힌 것은 Figma 세트 구조이지 컴포넌트가 아니다.
 
 ### 높이를 패딩이 아니라 값으로 갖는다
 
