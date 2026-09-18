@@ -44,21 +44,14 @@ line-height 가 아니라 서체의 실제 행높이**(ascender + descender)다 
 건이 그 과정에서 드러났다 — 컴파일도 Code Connect 문법 검사도 통과한 상태였다. 0.1.9 에서와
 같다. 코드가 말이 되는지는 도구가 보지만, 결과가 디자인과 같은지는 사람이 봐야 안다.
 
-### statement large 의 타이포 토큰
+### statement large 글자 토큰
 
-처음 구현할 때는 Pretendard 12/20 w700 에 맞는 토큰이 없어 파일 안 private 스타일로 실측값을
-박아 두었다. 그 뒤 디자이너가 Figma 의 해당 글자에 텍스트 스타일 `Font-1/Paragraph/paragraph-8-bold`
-(`font-1/paragraph/8-1`, 12/16 w700)를 연결해 주어 `BCPTypography.font1Paragraph8_1` 로 교체했다.
+처음 구현할 때는 이 글자에 맞는 토큰이 없어서 크기와 줄높이를 숫자로 적어 두었다. 그 뒤 디자이너가
+Figma 에서 이 글자에 `paragraph-8-bold` 토큰을 연결해 주어 코드도 `BCPTypography.font1Paragraph8_1`
+을 쓰도록 바꿨다. 줄높이 20 → 16, 위아래 여백 2 → 4 로 바뀌었고 배지 높이 24 는 그대로다.
 
-- line-height 가 20 → 16 으로 바뀌었고 Figma 는 세로 패딩을 2 → 4 로 늘려 높이 24 를 유지했다.
-  코드도 `spacing4` 로 따라간다. 배지 겉 크기는 변하지 않는다.
-- 토큰은 부모 저장소 `shared/tokens/src/typography.json` 에 **Typography 컬렉션의 신규 8개
-  (`paragraph/8-1`, `8-2`)만 부분 반영**해 `gen-foundation` 으로 생성했다. Figma 에는 그 사이
-  다른 변경(Primitives `font/size/*` 이름 변경, Semantic 8개 삭제)도 있어 전체 `pull-tokens`
-  는 별도 작업으로 남긴다.
-- Figma 쪽 텍스트 스타일은 family·weight·line-height 만 Variable 에 묶여 있고 **size 12 는
-  raw 값**이다. `font-1/paragraph/8-1/size` 변수는 있지만 스타일에 바인딩되지 않았다 — 코드는
-  토큰 값을 쓰므로 지금은 같다.
+토큰은 부모 저장소 `typography.json` 에 이 두 그룹(`paragraph/8-1`, `8-2`)만 넣고 생성했다.
+Figma 의 다른 토큰 변경은 이번에 건드리지 않았다.
 
 ### 남은 것
 
