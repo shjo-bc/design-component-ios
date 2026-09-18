@@ -4,7 +4,7 @@
 
 import SwiftUI
 
-/// 합성 타이포 스타일 57개.
+/// 합성 타이포 스타일 59개.
 ///
 /// 토큰은 `family` / `size` / `weight` / `line-height` 로 흩어져 있다 (`BCPTypographyTokens`).
 /// 여기서는 그룹 단위로 합쳐 바로 쓸 수 있게 한다.
@@ -463,5 +463,21 @@ public enum BCPTypography {
         size: 68,
         weight: 400,
         lineHeight: 82
+    )
+
+    /// `font-1/paragraph/8-1` — Pretendard 12/16 w700
+    public static let font1Paragraph8_1 = BCPTextStyle(
+        family: "Pretendard",
+        size: 12,
+        weight: 700,
+        lineHeight: 16
+    )
+
+    /// `font-1/paragraph/8-2` — Pretendard 12/16 w400
+    public static let font1Paragraph8_2 = BCPTextStyle(
+        family: "Pretendard",
+        size: 12,
+        weight: 400,
+        lineHeight: 16
     )
 }
