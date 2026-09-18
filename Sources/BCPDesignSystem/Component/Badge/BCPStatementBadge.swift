@@ -47,7 +47,7 @@ public enum BCPStatementBadgeType: Sendable {
 
 /// 명세서 배지 크기. Figma `badge-statement` 세트의 `size` 축.
 public enum BCPStatementBadgeSize: Sendable {
-    /// 높이 24 — 12pt 볼드, 좌우 8, radius 12
+    /// 높이 24 — 12pt 볼드(`font-1/paragraph/8-1`), 좌우 8, radius 12
     case large
     /// 높이 18 — 9pt 볼드, 좌우 6, radius 10
     case small
@@ -71,12 +71,6 @@ public struct BCPStatementBadge: View {
         self.size = size
     }
 
-    /// ⚠ large 는 Pretendard 12/20 w700 을 쓰는데 이 조합의 타이포 토큰이 없다
-    /// (`font-1/badge/*` 는 9pt 와 11pt 뿐). Figma 실측값을 그대로 둔다 — 토큰이 생기면 교체할 것.
-    private static let largeTextStyle = BCPTextStyle(
-        family: BCPTypography.font1BadgeMedium1.family, size: 12, weight: 700, lineHeight: 20
-    )
-
     public var body: some View {
         let c = theme.component
         switch size {
@@ -85,11 +79,14 @@ public struct BCPStatementBadge: View {
                 text: text,
                 surface: type.palette.surface(c),
                 foreground: type.palette.text(c),
-                textStyle: Self.largeTextStyle,
+                // Figma 텍스트 스타일 `Font-1/Paragraph/paragraph-8-bold` — 배지 전용 토큰이 아니라
+                // paragraph 계열을 빌려 쓴다. 처음엔 토큰 없이 12/20 실측값이었는데 디자이너가 토큰을
+                // 붙이면서 line-height 가 16 으로, 세로 패딩이 2 → 4 로 바뀌었다. 높이 24 는 그대로다.
+                textStyle: BCPTypography.font1Paragraph8_1,
                 horizontalPadding: BCPDimens.spacing8,
-                topPadding: BCPDimens.spacing2,
-                bottomPadding: BCPDimens.spacing2,
-                // 2 + line-height 20 + 2
+                topPadding: BCPDimens.spacing4,
+                bottomPadding: BCPDimens.spacing4,
+                // 4 + line-height 16 + 4
                 minHeight: 24,
                 cornerRadius: BCPDimens.radius12
             )
