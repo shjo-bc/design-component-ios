@@ -4,6 +4,75 @@
 **0.x 대에서는 공개 API 가 안정적이지 않다** — minor 가 아니라 patch 에서도 깨지는
 변경이 들어갈 수 있으므로, 올릴 때 이 문서를 먼저 확인할 것.
 
+## 0.1.10
+
+### 추가 — Badge 계열 4종
+
+Figma `Badges` 페이지를 구현했다. `Component/Badge/` 가 `.gitkeep` 만 있던 자리다.
+
+- **`BCPStatementBadge`** — Figma `badge-statement`. `size` 2종 × `type` 17종. 타입은 색 역할만
+  정하고 **문구는 호출부가 넘긴다** — "가족"·"법인공용" 같은 업무 문구를 디자인 시스템이
+  소유하지 않기 위해서다. 타입별 Figma 기본 문구는 doc 주석의 표에 남겼다.
+- **`BCPHomeCardBadge`** — Figma `badge-homecard`. `type` 8종. "잔액"·"D-8" 처럼 데이터가 들어가는
+  자리라 문구는 호출부가 넘긴다.
+- **`BCPTermsBadge`** — Figma `badge-terms`. `level` 1~5. 등급 명칭(안심·다소안심·보통·신중·주의)은
+  디자인이 정한 고정 문구라 컴포넌트가 갖는다.
+- **`BCPSmallBadge`** — Figma `badge-small`. `type` 3종(NEW·ON·OFF) × `style` 2종.
+  `subtle` 은 옅은 바탕에 같은 계열 글자, `strong` 은 꽉 찬 바탕에 대비되는 글자다.
+  `style` 을 생략하면 Figma 기본 변형을 따른다 — NEW·ON 은 `subtle`, OFF 는 `strong`.
+  Figma 의 `color=light-mode`/`dark-mode` 축은 디자이너가 모드를 손으로 바꿔 보려고 둔 것이라
+  옮기지 않았다 — 두 변형이 부르는 토큰이 같고 모드는 테마가 처리한다.
+
+색은 생성된 `badge/1` ~ `badge/11` (surface + text 11쌍) 토큰 안에서 전부 해결된다.
+네 컴포넌트가 공유하는 내부 코어 `BCPBadge` 가 텍스트·색·패딩·radius 를 받아 그린다.
+
+Code Connect 템플릿 4개(`codeconnect/badge-*.figma.ts`)도 함께 넣었다. **이 4개는 수동 작성이다** —
+부모 저장소 생성기(`tools/scripts/gen-*.mjs`)에 배지가 아직 없다. 생성기에 들어가면 대체된다.
+
+### 높이를 패딩이 아니라 값으로 갖는다
+
+Figma 의 배지 높이는 `세로 패딩 + line-height` 다. 그런데 **SwiftUI 의 한 줄 `Text` 높이는
+line-height 가 아니라 서체의 실제 행높이**(ascender + descender)다 — 12pt Pretendard 면 20 이
+아니라 약 14 다. 패딩만 옮기면 statement large 가 24 가 아니라 18 로 나온다.
+
+그래서 `BCPBadge` 가 `minHeight` 를 받는다. `BCPButton` 이 높이를 따로 갖는 것과 같은 이유이고,
+고정이 아니라 최소값이라 문구가 길어지거나 서체가 폴백돼 커져도 잘리지 않는다.
+
+### 확인한 것
+
+**Xcode Preview 로 라이트·다크 양쪽을 네 컴포넌트 모두 Figma 와 대조했다.** 위 `badge-small`
+건이 그 과정에서 드러났다 — 컴파일도 Code Connect 문법 검사도 통과한 상태였다. 0.1.9 에서와
+같다. 코드가 말이 되는지는 도구가 보지만, 결과가 디자인과 같은지는 사람이 봐야 안다.
+
+### statement large 글자 토큰
+
+처음 구현할 때는 이 글자에 맞는 토큰이 없어서 크기와 줄높이를 숫자로 적어 두었다. 그 뒤 디자이너가
+Figma 에서 이 글자에 `paragraph-8-bold` 토큰을 연결해 주어 코드도 `BCPTypography.font1Paragraph8_1`
+을 쓰도록 바꿨다. 줄높이 20 → 16, 위아래 여백 2 → 4 로 바뀌었고 배지 높이 24 는 그대로다.
+
+토큰은 부모 저장소 `typography.json` 에 이 두 그룹(`paragraph/8-1`, `8-2`)만 넣고 생성했다.
+Figma 의 다른 토큰 변경은 이번에 건드리지 않았다.
+
+### 남은 것
+
+- **서체는 아직 대조하지 못했다.** 패키지 Preview 는 Pretendard 를 번들에 넣지 않아 시스템
+  폰트로 떨어진다. 글자 폭이 달라 배지 가로 길이가 실제 앱과 다르다. 서체까지 보려면 갤러리
+  앱에 Badges 탭이 필요한데 아직 없다.
+
+### Figma 를 그대로 따른 것
+
+디자인 파일은 건드리지 않는다. 코드가 맞춘다. 둘 다 이름과 실제가 어긋나 있어
+모르고 보면 틀리기 쉬운 자리다.
+
+- **`badge-small` 의 옅은 회색 OFF 배지는 변형 이름이 `type=new` 다**
+  (`color=light-mode` / `dark-mode`). 이름은 new 지만 그려지는 글자는 "OFF" 라서
+  코드에서는 `.off` 의 `subtle` 로 받는다. Preview 를 화면으로 대조하다 드러났다 —
+  그 전까지는 Figma 에 없는 "회색 NEW" 를 만들 수 있고 정작 옅은 회색 OFF 는 만들 수 없는
+  상태였다.
+- **`badge-homecard` 의 `company` variant 이름 앞에 백스페이스 문자(U+0008)가 있다.**
+  눈에 보이지 않으므로 Code Connect 템플릿에서 철자를 그대로 맞춰야 한다 — 빠뜨리면
+  이 variant 만 매핑이 빈다.
+
 ## 0.1.9
 
 **시뮬레이터에 띄워 화면으로 확인하면서 찾은 것들이다.** 아래 다섯 건 모두 컴파일·스니펫

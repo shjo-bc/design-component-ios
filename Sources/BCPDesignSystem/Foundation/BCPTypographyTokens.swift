@@ -4,7 +4,7 @@
 
 import SwiftUI
 
-/// Typography 컬렉션 (228개)
+/// Typography 컬렉션 (236개)
 public enum BCPTypographyTokens {
     /// `font-1/display/1-1/family`
     public static let font1Display1_1Family: String = "Pretendard"
@@ -689,4 +689,28 @@ public enum BCPTypographyTokens {
 
     /// `font-1/display/3-2/line-height`
     public static let font1Display3_2LineHeight: CGFloat = 82
+
+    /// `font-1/paragraph/8-1/family`
+    public static let font1Paragraph8_1Family: String = "Pretendard"
+
+    /// `font-1/paragraph/8-1/size`
+    public static let font1Paragraph8_1Size: CGFloat = 12
+
+    /// `font-1/paragraph/8-1/weight`
+    public static let font1Paragraph8_1Weight: Int = 700
+
+    /// `font-1/paragraph/8-1/line-height`
+    public static let font1Paragraph8_1LineHeight: CGFloat = 16
+
+    /// `font-1/paragraph/8-2/family`
+    public static let font1Paragraph8_2Family: String = "Pretendard"
+
+    /// `font-1/paragraph/8-2/size`
+    public static let font1Paragraph8_2Size: CGFloat = 12
+
+    /// `font-1/paragraph/8-2/weight`
+    public static let font1Paragraph8_2Weight: Int = 400
+
+    /// `font-1/paragraph/8-2/line-height`
+    public static let font1Paragraph8_2LineHeight: CGFloat = 16
 }
