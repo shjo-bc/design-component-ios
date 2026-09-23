@@ -4,6 +4,51 @@
 **0.x 대에서는 공개 API 가 안정적이지 않다** — minor 가 아니라 patch 에서도 깨지는
 변경이 들어갈 수 있으므로, 올릴 때 이 문서를 먼저 확인할 것.
 
+## 0.1.11
+
+### 추가 — Terms 계열 (약관 동의 UI)
+
+Figma `Terms` 페이지(`2820:3343`)를 구현했다. `Component/Terms/` 가 새로 생겼다.
+
+| 컴포넌트 | Figma 세트 | 변형 |
+|---|---|---|
+| `BCPTermsAgree` | `terms_agree` (`2820:3466`) | selected 2 × size 2 |
+| `BCPTermsAgreeAccordion` | `terms_agree_accordion` (`14330:4993`) | selected 2 × arrow open 2 × size 2 |
+| `BCPTermsListItem` + `BCPTermsSubItemRow(style: .list)` | `terms_list` (`2852:11740`) | type 3 × selected 2 |
+| `BCPTermsISPListItem` + `BCPTermsSubItemRow(style: .isp)` | `terms_isp_list` (`50165:528`) | type 3 × selected 2 |
+
+- **문구는 호출부가 넘긴다.** "페이북 약관 모두 동의"·"휴대전화" 는 Figma 예시일 뿐 화면마다 다르다.
+- **`mode` 축(light/dark)은 옮기지 않았다** — badge-small 과 같은 이유다. 두 변형이 부르는 토큰이
+  같고 모드는 테마가 정한다.
+- **accordion 의 `arrow open` 축은 `isExpanded` 로 뒤집어 받는다.** Figma `arrow open=true` 가
+  아래 화살표(접힌 상태)라서 `isExpanded == false` 에 대응한다. Code Connect 템플릿이 변환한다.
+- **깊이는 `BCPTermsDepth` 하나로 공유한다.** 1depth 는 `BCPCheckbox`(상자 있음), 2·3depth 는
+  상자 없는 체크 표시(내부 `BCPTermsCheckmark`)다. Figma `checkmark` 세트(`1430:44566`)는
+  variant 이름이 깨져 있어 공개 컴포넌트로 올리지 않고 Terms 안에서만 쓴다.
+- **3depth 는 한 줄에 여러 개가 놓인다.** Figma 의 `type=3depth` variant 가 그 줄 전체라서
+  `BCPTermsSubItemRow` 가 들여쓰기(list 50 · isp 36)와 간격(8 · 12)을 맡고 안에 잎 항목을 넣는다.
+- **2depth 배지**는 `badge: BCPTermsBadgeLevel?` 로 받아 `BCPTermsBadge` 를 그대로 쓴다.
+  Figma 인스턴스 프로퍼티 `2depht_badge`(오타 그대로) 에 대응한다. `1depth_badge`·`show badge` 는
+  모든 variant 에서 숨겨져 있어 위치를 알 수 없다 — `1depth_badge` 는 2depth 와 같은 자리로 두고,
+  `show badge`(agree) 는 옮기지 않았다.
+- **화살표 아이콘은 `chevronRight` 하나를 회전해서 쓴다.** Figma 의 down/up 아이콘이 right 를 90°
+  돌린 것과 좌표까지 같다(실측). 새 벡터 경로를 생성물에 추가하지 않았다.
+- **행 높이는 line-height 를 최소 높이로 걸어 맞췄다** (`bcpLineHeightFloor`). `BCPBadge` 와 같은
+  이유 — SwiftUI 한 줄 `Text` 는 서체 행높이를 쓰므로 패딩만으로는 Figma 높이가 안 나온다.
+  agree large 70 · small 56, list 48 · 44 · 44, isp 36 이 그대로 나온다(시뮬레이터 확인).
+- agree small 의 글자는 Figma 에 토큰 없이 Pretendard Bold 16/24 로 박혀 있어 값이 같은
+  `font-1/paragraph/4-1` 로 읽었다.
+
+색은 이미 생성돼 있던 `terms/sarface`(Figma 오타 그대로) · `terms/line-normal` · `terms/line-selected` ·
+`terms/radius`(16) 와 semantic `color/point/6` · `color/font/neutral/2·4` · `color/surface/7`,
+체크박스 토큰으로 전부 해결된다. 토큰을 새로 만들지 않았다.
+
+Code Connect 템플릿 4개(`codeconnect/terms-*.figma.ts`)는 **수동 작성**이다 — 부모 저장소 생성기에
+terms 가 없다. 생성기에 들어가면 대체된다.
+
+접근성: agree 는 체크박스+제목이 한 버튼(선택됨/선택 안 함), accordion 화살표는 별도 버튼("약관 목록
+펼치기/접기"). 목록 항목은 체크와 "약관 내용 보기" 영역이 따로 읽힌다.
+
 ## 0.1.10
 
 ### 추가 — Badge 계열 4종
