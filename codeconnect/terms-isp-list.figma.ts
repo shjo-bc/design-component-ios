@@ -26,7 +26,7 @@ const isLeaf = instance.getEnum('type', {
 
 const leaf = figma.code`
 BCPTermsSubItemRow(style: .isp) {
-    BCPTermsISPListItem("모바일 메세지(SMS 등)", depth: .depth3, selected: ${selected}) { _ in }
+    BCPTermsISPListItem("휴대전화", depth: .depth3, selected: ${selected}) { _ in }
     BCPTermsISPListItem("모바일 메세지(SMS 등)", depth: .depth3, selected: ${selected}) { _ in }
 }
 `

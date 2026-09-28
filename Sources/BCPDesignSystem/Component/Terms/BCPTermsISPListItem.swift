@@ -110,7 +110,7 @@ struct BCPTermsISPListItem_Previews: PreviewProvider {
                 // 체크 없는 약관 — 안내만 한다
                 BCPTermsISPListItem("ISP 서비스 안내", depth: .depth2, onDetail: {})
                 BCPTermsSubItemRow(style: .isp) {
-                    BCPTermsISPListItem("모바일 메세지(SMS 등)", depth: .depth3, selected: sms1) { sms1 = $0 }
+                    BCPTermsISPListItem("휴대전화", depth: .depth3, selected: sms1) { sms1 = $0 }
                     BCPTermsISPListItem("모바일 메세지(SMS 등)", depth: .depth3, selected: sms2) { sms2 = $0 }
                 }
             }
