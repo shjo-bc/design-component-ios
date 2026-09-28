@@ -75,6 +75,7 @@ preview 는 `#if DEBUG` 안에 있어 **릴리스 빌드에는 포함되지 않�
 | `BCPStatementBadge.swift` | 타입 17종 × 크기 2종의 색 팔레트 |
 | `BCPTermsAgree.swift` | 전체 동의 상자 · 눌러서 선택/펼침 전이 |
 | `BCPTermsListItem.swift` | 약관 목록 1·2·3depth · 등급 배지 |
+| `BCPTermsSelection.swift` | 전체 동의 · 상위 · 하위 체크 연계 (눌러서 확인) |
 
 ### 갤러리 앱
 

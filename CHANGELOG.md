@@ -45,6 +45,13 @@ Figma `Terms` 페이지(`2820:3343`)를 구현했다. `Component/Terms/` 가 새
   화살표를 그리지 않는다. Figma 에는 이 모양이 없어(Overlays 의 약관 팝업도 체크 있는 행만 쓴다)
   글자를 당기는 쪽으로 정했다 — 디자이너 확인 필요.
 
+- **상위·하위 체크 연계**는 `BCPTermsSelection` 이 맡는다. 상위를 체크하면 그 아래가 전부 같은
+  값이 되고, 하위가 전부 체크되면 상위도 체크된 것으로 보인다. 잎 항목의 상태만 저장하고 상위는
+  매번 계산하므로 두 방향이 어긋날 수 없다. 전체 동의 → 1depth → 2depth → 3depth 처럼 여러 단계가
+  겹쳐도 같은 규칙이다. 뷰가 아니라 값이라 `@State` 든 뷰 모델이든 넣어 쓰고, 뷰에는 계산한 값만
+  넘긴다. 하위가 일부만 체크된 상위는 미선택으로 보인다 — Figma 에 "일부 선택" 모양이 없다.
+  구분이 필요하면 `isPartiallySelected(_:)` 로 알 수 있다.
+
 색은 이미 생성돼 있던 `terms/sarface`(Figma 오타 그대로) · `terms/line-normal` · `terms/line-selected` ·
 `terms/radius`(16) 와 semantic `color/point/6` · `color/font/neutral/2·4` · `color/surface/7`,
 체크박스 토큰으로 전부 해결된다. 토큰을 새로 만들지 않았다.

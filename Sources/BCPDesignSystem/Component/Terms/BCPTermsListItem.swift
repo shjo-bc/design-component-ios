@@ -30,6 +30,9 @@ public enum BCPTermsDepth: Sendable {
 /// BCPTermsListItem("개인정보 처리방침 안내", depth: .depth2, onDetail: { showPolicy() })
 /// ```
 ///
+/// 상위 항목과 하위 항목의 체크를 서로 잇는 것은 `BCPTermsSelection` 이 한다. 이 뷰는
+/// 받은 상태를 그리기만 한다.
+///
 /// - 체크(박스)를 누르면 `onChange`, 글자·화살표를 누르면 `onDetail` 이 불린다.
 ///   `onDetail` 이 없으면 화살표는 그대로 그려지되 글자 영역은 체크를 토글한다.
 /// - `badge` 는 Figma 인스턴스 프로퍼티 `2depht_badge`(Figma 오타 그대로)·`1depth_badge` 다.
