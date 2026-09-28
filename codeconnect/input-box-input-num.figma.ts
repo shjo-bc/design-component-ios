@@ -3,7 +3,7 @@
 // component=BCPBoxTextField
 
 // 자동 생성: node tools/scripts/gen-largeinput-templates.mjs
-// Figma 세트 'box-input-num' (7682:1610) · variant 20개
+// Figma 세트 'textfield-box-num' (7682:1610) · variant 20개
 import figma from 'figma'
 
 const instance = figma.selectedInstance

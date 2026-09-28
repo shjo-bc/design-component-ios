@@ -4,7 +4,7 @@
 
 import SwiftUI
 
-/// Primitives 컬렉션 (271개)
+/// Primitives 컬렉션 (276개)
 public enum BCPPrimitives {
     /// `color/gray/white`
     public static let colorGrayWhite: Color = Color(.sRGB, red: 1.0, green: 1.0, blue: 1.0, opacity: 1.0)
@@ -666,77 +666,89 @@ public enum BCPPrimitives {
     /// `font/family/1-title`
     public static let fontFamily1Title: String = "Pretendard"
 
-    /// `font/size/1-9`
-    public static let fontSize1_9: CGFloat = 9
+    /// `font/size/8`
+    public static let fontSize8: CGFloat = 8
 
-    /// `font/size/2-11`
-    public static let fontSize2_11: CGFloat = 11
+    /// `font/size/9`
+    public static let fontSize9: CGFloat = 9
 
-    /// `font/line-height/1-10`
-    public static let fontLineHeight1_10: CGFloat = 10
+    /// `font/size/10`
+    public static let fontSize10: CGFloat = 10
+
+    /// `font/size/11`
+    public static let fontSize11: CGFloat = 11
+
+    /// `font/line-height/10`
+    public static let fontLineHeight10: CGFloat = 10
 
     /// `font/weight/light`
     public static let fontWeightLight: CGFloat = 300
 
-    /// `font/line-height/2-12`
-    public static let fontLineHeight2_12: CGFloat = 12
+    /// `font/line-height/12`
+    public static let fontLineHeight12: CGFloat = 12
 
-    /// `font/line-height/3-18`
-    public static let fontLineHeight3_18: CGFloat = 18
+    /// `font/line-height/14`
+    public static let fontLineHeight14: CGFloat = 14
 
-    /// `font/line-height/4-20`
-    public static let fontLineHeight4_20: CGFloat = 20
+    /// `font/line-height/16`
+    public static let fontLineHeight16: CGFloat = 16
 
-    /// `font/line-height/5-22`
-    public static let fontLineHeight5_22: CGFloat = 22
+    /// `font/line-height/18`
+    public static let fontLineHeight18: CGFloat = 18
 
-    /// `font/line-height/6-24`
-    public static let fontLineHeight6_24: CGFloat = 24
+    /// `font/line-height/20`
+    public static let fontLineHeight20: CGFloat = 20
 
-    /// `font/line-height/7-26`
-    public static let fontLineHeight7_26: CGFloat = 26
+    /// `font/line-height/22`
+    public static let fontLineHeight22: CGFloat = 22
 
-    /// `font/line-height/8-28`
-    public static let fontLineHeight8_28: CGFloat = 28
+    /// `font/line-height/24`
+    public static let fontLineHeight24: CGFloat = 24
 
-    /// `font/line-height/9-30`
-    public static let fontLineHeight9_30: CGFloat = 30
+    /// `font/line-height/26`
+    public static let fontLineHeight26: CGFloat = 26
 
-    /// `font/line-height/10-32`
-    public static let fontLineHeight10_32: CGFloat = 32
+    /// `font/line-height/28`
+    public static let fontLineHeight28: CGFloat = 28
 
-    /// `font/line-height/11-34`
-    public static let fontLineHeight11_34: CGFloat = 34
+    /// `font/line-height/30`
+    public static let fontLineHeight30: CGFloat = 30
 
-    /// `font/line-height/12-36`
-    public static let fontLineHeight12_36: CGFloat = 36
+    /// `font/line-height/32`
+    public static let fontLineHeight32: CGFloat = 32
 
-    /// `font/line-height/13-40`
-    public static let fontLineHeight13_40: CGFloat = 40
+    /// `font/line-height/34`
+    public static let fontLineHeight34: CGFloat = 34
 
-    /// `font/line-height/14-42`
-    public static let fontLineHeight14_42: CGFloat = 42
+    /// `font/line-height/36`
+    public static let fontLineHeight36: CGFloat = 36
 
-    /// `font/line-height/15-44`
-    public static let fontLineHeight15_44: CGFloat = 44
+    /// `font/line-height/40`
+    public static let fontLineHeight40: CGFloat = 40
 
-    /// `font/line-height/16-50`
-    public static let fontLineHeight16_50: CGFloat = 50
+    /// `font/line-height/42`
+    public static let fontLineHeight42: CGFloat = 42
 
-    /// `font/line-height/17-58`
-    public static let fontLineHeight17_58: CGFloat = 58
+    /// `font/line-height/44`
+    public static let fontLineHeight44: CGFloat = 44
 
-    /// `font/line-height/18-64`
-    public static let fontLineHeight18_64: CGFloat = 64
+    /// `font/line-height/50`
+    public static let fontLineHeight50: CGFloat = 50
 
-    /// `font/line-height/19-86`
-    public static let fontLineHeight19_86: CGFloat = 82
+    /// `font/line-height/58`
+    public static let fontLineHeight58: CGFloat = 58
 
-    /// `font/line-height/20-96`
-    public static let fontLineHeight20_96: CGFloat = 94
+    /// `font/line-height/64`
+    public static let fontLineHeight64: CGFloat = 64
 
-    /// `font/line-height/21-106`
-    public static let fontLineHeight21_106: CGFloat = 106
+    /// `font/line-height/82`
+    public static let fontLineHeight82: CGFloat = 82
+
+    /// `font/line-height/94`
+    public static let fontLineHeight94: CGFloat = 94
+
+    /// `font/line-height/106`
+    public static let fontLineHeight106: CGFloat = 106
 
     /// `font/weight/regular`
     public static let fontWeightRegular: CGFloat = 400
@@ -747,68 +759,71 @@ public enum BCPPrimitives {
     /// `font/weight/bold`
     public static let fontWeightBold: CGFloat = 700
 
-    /// `font/size/3-13`
-    public static let fontSize3_13: CGFloat = 13
+    /// `font/size/12`
+    public static let fontSize12: CGFloat = 12
 
-    /// `font/size/4-14`
-    public static let fontSize4_14: CGFloat = 14
+    /// `font/size/13`
+    public static let fontSize13: CGFloat = 13
 
-    /// `font/size/5-15`
-    public static let fontSize5_15: CGFloat = 15
+    /// `font/size/14`
+    public static let fontSize14: CGFloat = 14
 
-    /// `font/size/6-16`
-    public static let fontSize6_16: CGFloat = 16
+    /// `font/size/15`
+    public static let fontSize15: CGFloat = 15
 
-    /// `font/size/7-17`
-    public static let fontSize7_17: CGFloat = 17
+    /// `font/size/16`
+    public static let fontSize16: CGFloat = 16
 
-    /// `font/size/8-18`
-    public static let fontSize8_18: CGFloat = 18
+    /// `font/size/17`
+    public static let fontSize17: CGFloat = 17
 
-    /// `font/size/9-19`
-    public static let fontSize9_19: CGFloat = 19
+    /// `font/size/18`
+    public static let fontSize18: CGFloat = 18
 
-    /// `font/size/10-20`
-    public static let fontSize10_20: CGFloat = 20
+    /// `font/size/19`
+    public static let fontSize19: CGFloat = 19
 
-    /// `font/size/11-22`
-    public static let fontSize11_22: CGFloat = 22
+    /// `font/size/20`
+    public static let fontSize20: CGFloat = 20
 
-    /// `font/size/12-24`
-    public static let fontSize12_24: CGFloat = 24
+    /// `font/size/22`
+    public static let fontSize22: CGFloat = 22
 
-    /// `font/size/13-26`
-    public static let fontSize13_26: CGFloat = 26
+    /// `font/size/24`
+    public static let fontSize24: CGFloat = 24
 
-    /// `font/size/14-28`
-    public static let fontSize14_28: CGFloat = 28
+    /// `font/size/26`
+    public static let fontSize26: CGFloat = 26
 
-    /// `font/size/15-30`
-    public static let fontSize15_30: CGFloat = 30
+    /// `font/size/28`
+    public static let fontSize28: CGFloat = 28
 
-    /// `font/size/16-32`
-    public static let fontSize16_32: CGFloat = 32
+    /// `font/size/30`
+    public static let fontSize30: CGFloat = 30
 
-    /// `font/size/17-36`
-    public static let fontSize17_36: CGFloat = 36
+    /// `font/size/32`
+    public static let fontSize32: CGFloat = 32
 
-    /// `font/size/18-42`
-    public static let fontSize18_42: CGFloat = 42
+    /// `font/size/36`
+    public static let fontSize36: CGFloat = 36
 
-    /// `font/size/18-48`
-    public static let fontSize18_48: CGFloat = 48
+    /// `font/size/42`
+    public static let fontSize42: CGFloat = 42
 
-    /// `font/size/20-54`
-    public static let fontSize20_54: CGFloat = 54
+    /// `font/size/48`
+    public static let fontSize48: CGFloat = 48
 
-    /// `font/size/21-72`
-    public static let fontSize21_72: CGFloat = 68
+    /// `font/size/54`
+    public static let fontSize54: CGFloat = 54
 
-    /// `font/size/22-80`
-    public static let fontSize22_80: CGFloat = 78
+    /// `font/size/68`
+    public static let fontSize68: CGFloat = 68
 
-    /// `font/size/23-88`
-    public static let fontSize23_88: CGFloat = 88
+    /// `font/size/78`
+    public static let fontSize78: CGFloat = 78
+
+    /// `font/size/88`
+    public static let fontSize88: CGFloat = 88
 
     /// `font/family/1-body`
     public static let fontFamily1Body: String = "Pretendard"

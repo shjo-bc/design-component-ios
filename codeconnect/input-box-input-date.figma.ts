@@ -3,7 +3,7 @@
 // component=BCPBoxTextField
 
 // 자동 생성: node tools/scripts/gen-select-templates.mjs
-// Figma 세트 'box-input-date' (4822:6863) · variant 6개
+// Figma 세트 'textfield-box-date' (4822:6863) · variant 6개
 import figma from 'figma'
 
 const instance = figma.selectedInstance

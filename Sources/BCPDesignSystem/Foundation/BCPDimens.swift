@@ -54,17 +54,17 @@ public enum BCPDimens {
     /// `spacing/2`
     public static let spacing2: CGFloat = 2
 
-    /// `border/1`
-    public static let border1: CGFloat = 1
-
     /// `shadow/layered/x`
     public static let shadowLayeredX: CGFloat = 0
 
-    /// `shadow/layered/y`
-    public static let shadowLayeredY: CGFloat = -12
+    /// `border/1`
+    public static let border1: CGFloat = 1
 
     /// `border/2`
     public static let border2: CGFloat = 2
+
+    /// `shadow/layered/y`
+    public static let shadowLayeredY: CGFloat = -12
 
     /// `shadow/layered/blur`
     public static let shadowLayeredBlur: CGFloat = 24

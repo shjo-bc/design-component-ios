@@ -4,7 +4,7 @@
 
 // ⚠ 수동 작성이다. 부모 저장소(design-component)의 tools/scripts/gen-*.mjs 산출물이 아니다.
 // 생성기에 배지가 들어가면 이 파일은 그쪽 산출물로 대체된다.
-// Figma 세트 'badge-statement' (49409:14261) · variant 34개 (size 2 × type 17)
+// Figma 세트 'badge-statement' (49409:14261) · variant 36개 (size 2 × type 18)
 import figma from 'figma'
 
 const instance = figma.selectedInstance
@@ -30,6 +30,7 @@ const type = instance.getEnum('type', {
     "charge-OK": ".chargeOK",
     "error-1": ".error1",
     "error-2": ".error2",
+    "error-3": ".error3",
     "isp": ".isp",
   })
 

@@ -3,7 +3,7 @@
 // component=BCPLineTextField
 
 // 자동 생성: node tools/scripts/gen-line-templates.mjs
-// Figma 세트 'line-input-basic' (1192:12257) · variant 14개
+// Figma 세트 'textfield-line-basic' (1192:12257) · variant 14개
 import figma from 'figma'
 
 const instance = figma.selectedInstance

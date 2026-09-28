@@ -3,7 +3,7 @@
 // component=BCPScrollToTopButton
 
 // 자동 생성: node tools/scripts/gen-textbutton-templates.mjs
-// Figma 세트 'go-to-the-top' (1617:14407) · variant 4개
+// Figma 세트 'button-scroll-to-top' (1617:14407) · variant 4개
 import figma from 'figma'
 
 export default {

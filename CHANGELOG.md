@@ -6,6 +6,54 @@
 
 ## 0.1.11
 
+### ⚠ Primitives 폰트 심볼 이름이 바뀐다 (값은 그대로)
+
+Figma 가 `font/size/*` · `font/line-height/*` 변수 이름을 `순번-값`(`font/size/12-24`)에서
+값 이름(`font/size/24`)으로 통일했다. 옛 이름은 순번 뒤 숫자가 실제 값과 다른 것이 섞여 있었다
+(`font/size/21-72` 의 값은 68). 생성물 `BCPPrimitives` 의 심볼 44개가 새 이름으로 바뀐다.
+**모든 옛 심볼에 같은 값의 새 심볼이 있다** — 이름만 고치면 된다. 컴포넌트는 이 심볼을 직접
+쓰지 않아 영향이 없다.
+
+```swift
+// 전
+BCPPrimitives.fontSize12_24      // 24
+BCPPrimitives.fontSize21_72      // 68
+BCPPrimitives.fontLineHeight19_86 // 82
+// 후 — 이름이 곧 값이다
+BCPPrimitives.fontSize24
+BCPPrimitives.fontSize68
+BCPPrimitives.fontLineHeight82
+```
+
+새로 생긴 값: `fontSize8` · `fontSize10` · `fontSize12` · `fontLineHeight14` · `fontLineHeight16`.
+
+### ⚠ `BCPStatementBadgeType` 에 `error3` 추가
+
+Figma `badge-statement` 에 `type=error-3`(기본 문구 "부족")이 생겼다. 색·치수·타이포가
+`error-1`·`error-2` 와 같다(`badge/2`). 공개 enum 에 case 가 늘어서 **`switch` 로 모든 case 를
+다루던 호출부는 컴파일이 깨진다.**
+
+```swift
+// 전 — 컴파일 에러: switch must be exhaustive
+switch type {
+case .error1, .error2: …
+…
+}
+// 후
+switch type {
+case .error1, .error2, .error3: …
+…
+}
+```
+
+### Figma 세트 이름 변경 (코드 영향 없음)
+
+2026-09-28 Figma 가 세트 이름을 정리했다(`radiobtn` → `radiobutton`, `box-input-basic` →
+`textfield-box-basic` 등). Code Connect 템플릿의 파일명·`id` 는 **바꾸지 않았다** — 머리 주석의
+세트 이름만 새 이름이다. Controls 의 `state` 값이 `selected`/`unselected`·`on`/`off` 에서
+`true`/`false` 로 바뀌어 `control-*.figma.ts` 매핑을 새 값으로 다시 생성했다. 옛 템플릿은 새
+variant 를 전부 미선택으로 그렸다.
+
 ### 추가 — Terms 계열 (약관 동의 UI)
 
 Figma `Terms` 페이지(`2820:3343`)를 구현했다. `Component/Terms/` 가 새로 생겼다.

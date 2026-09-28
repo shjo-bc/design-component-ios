@@ -3,7 +3,7 @@
 // component=BCPSearchBar
 
 // 자동 생성: node tools/scripts/gen-search-templates.mjs
-// Figma 세트 'searchbar-2' (6723:2201) · variant 16개
+// Figma 세트 'textfield-searchbar-2' (6723:2201) · variant 16개
 import figma from 'figma'
 
 const instance = figma.selectedInstance
