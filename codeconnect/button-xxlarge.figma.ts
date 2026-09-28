@@ -3,7 +3,7 @@
 // component=BCPButton
 
 // 자동 생성: node tools/scripts/gen-button-templates.mjs
-// Figma 세트 'xxlarge' (9498:2205) · variant 24개
+// Figma 세트 'button-xxlarge' (9498:2205) · variant 24개
 // 인스턴스 프로퍼티 철자: 없음
 import figma from 'figma'
 
@@ -13,16 +13,16 @@ const instance = figma.selectedInstance
 //   스니펫의 문구는 고정값이며 실제 텍스트를 반영하지 못한다.
 const label = 'Label'
 const type = instance.getEnum('type', {
-    "primary": ".primary",
     "outlined-1": ".outlined",
-    "yellow": ".isp",
+    "primary": ".primary",
     "purple": ".openApp",
+    "yellow": ".isp",
   })
 // state=pressed 는 런타임 상태라 코드 prop 이 아니다 (docs/naming-contract.md §2)
 const enabled = instance.getEnum('state', {
+    "disabled": false,
     "normal": true,
     "pressed": true,
-    "disabled": false,
   })
 const disabledModifier = figma.code`${enabled ? '' : '.disabled(true)'}`
 

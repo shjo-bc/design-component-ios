@@ -3,7 +3,7 @@
 // component=BCPLineTextField
 
 // 자동 생성: node tools/scripts/gen-select-templates.mjs
-// Figma 세트 'line-input-dropdown' (1197:19226) · variant 6개
+// Figma 세트 'textfield-line-dropdown' (1197:19226) · variant 6개
 import figma from 'figma'
 
 const instance = figma.selectedInstance

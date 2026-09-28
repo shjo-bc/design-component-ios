@@ -72,7 +72,7 @@ preview 는 `#if DEBUG` 안에 있어 **릴리스 빌드에는 포함되지 않�
 | `BCPCheckbox.swift` | 상태 전이 + **44×44pt 터치 타깃 대비** |
 | `BCPBoxTextField.swift` | validation · 금융 입력 · 선택형 |
 | `BCPLineTextField.swift` | 밑줄 색 전이 · 지우기 버튼 |
-| `BCPStatementBadge.swift` | 타입 17종 × 크기 2종의 색 팔레트 |
+| `BCPStatementBadge.swift` | 타입 18종 × 크기 2종의 색 팔레트 |
 | `BCPTermsAgree.swift` | 전체 동의 상자 · 눌러서 선택/펼침 전이 |
 | `BCPTermsListItem.swift` | 약관 목록 1·2·3depth · 등급 배지 |
 | `BCPTermsSelection.swift` | 전체 동의 · 상위 · 하위 체크 연계 (눌러서 확인) |

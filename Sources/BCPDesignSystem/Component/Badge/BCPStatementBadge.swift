@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// 명세서·카드 목록용 배지의 의미 유형. Figma `badge-statement` 세트의 `type` 축 17종.
+/// 명세서·카드 목록용 배지의 의미 유형. Figma `badge-statement` 세트의 `type` 축 18종.
 ///
 /// 타입은 **색 역할만** 결정한다. Figma 에는 타입마다 문구가 박혀 있지만(아래 표), 업무 문구를
 /// 디자인 시스템이 소유하지 않도록 텍스트는 호출부가 넘긴다.
@@ -15,7 +15,7 @@ import SwiftUI
 /// | property | 내자산 | badge/6 (yellow) |
 /// | onnuri | 온누리 | badge/4 (orange) |
 /// | openApp / openPay / chargeOK | 오픈앱 / 오픈페이 / 자동충전ON | badge/1 (violet) |
-/// | error1 / error2 | 이용불가 / 교체불가 | badge/2 (pink) |
+/// | error1 / error2 / error3 | 이용불가 / 교체불가 / 부족 | badge/2 (pink) |
 /// | isp | ISP | badge/5 (yellow) |
 public enum BCPStatementBadgeType: Sendable {
     case family, top
@@ -26,7 +26,7 @@ public enum BCPStatementBadgeType: Sendable {
     case property
     case onnuri
     case openApp, openPay, chargeOK
-    case error1, error2
+    case error1, error2, error3
     case isp
 
     var palette: BCPBadgePalette {
@@ -39,7 +39,7 @@ public enum BCPStatementBadgeType: Sendable {
         case .property: return .badge6
         case .onnuri: return .badge4
         case .openApp, .openPay, .chargeOK: return .badge1
-        case .error1, .error2: return .badge2
+        case .error1, .error2, .error3: return .badge2
         case .isp: return .badge5
         }
     }
@@ -114,7 +114,7 @@ struct BCPStatementBadge_Previews: PreviewProvider {
         ("가족", .family), ("법인", .company1), ("법인공용", .company2), ("TOP", .top),
         ("QR", .qr), ("확정", .confirm), ("예정", .undetermined), ("내자산", .property),
         ("온누리", .onnuri), ("우리", .woori), ("목표OK", .goalOK), ("오픈앱", .openApp),
-        ("오픈페이", .openPay), ("이용불가", .error1), ("교체불가", .error2), ("ISP", .isp),
+        ("오픈페이", .openPay), ("이용불가", .error1), ("교체불가", .error2), ("부족", .error3), ("ISP", .isp),
         ("자동충전ON", .chargeOK),
     ]
 

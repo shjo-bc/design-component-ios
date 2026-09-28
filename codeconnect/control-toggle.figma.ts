@@ -9,13 +9,13 @@ import figma from 'figma'
 const instance = figma.selectedInstance
 
 const checked = instance.getEnum('state', {
-    "off": false,
-    "on": true,
+    "false": false,
+    "true": true,
   })
 // state=disabled 는 코드에서 enabled/.disabled() 로 표현한다 (docs/naming-contract.md §2)
 const enabled = instance.getEnum('state', {
-    "off": true,
-    "on": true,
+    "false": true,
+    "true": true,
   })
 const disabledModifier = figma.code`${enabled ? '' : '.disabled(true)'}`
 

@@ -3,7 +3,7 @@
 // component=BCPUnderlineButton
 
 // 자동 생성: node tools/scripts/gen-textbutton-templates.mjs
-// Figma 세트 'underline' (1755:7525) · variant 12개
+// Figma 세트 'button-underline' (1755:7525) · variant 12개
 // ⚠ 이 세트에는 인스턴스 프로퍼티가 없다 (텍스트가 일반 레이어).
 //   따라서 스니펫의 "Label" 은 고정값이며 실제 텍스트를 반영하지 못한다.
 import figma from 'figma'

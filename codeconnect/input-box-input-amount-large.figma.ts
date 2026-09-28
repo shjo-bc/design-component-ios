@@ -3,7 +3,7 @@
 // component=BCPBoxTextField
 
 // 자동 생성: node tools/scripts/gen-largeinput-templates.mjs
-// Figma 세트 'box-input-amount-large' (7575:1370) · variant 14개
+// Figma 세트 'textfield-box-amount-large' (7575:1370) · variant 14개
 import figma from 'figma'
 
 const instance = figma.selectedInstance

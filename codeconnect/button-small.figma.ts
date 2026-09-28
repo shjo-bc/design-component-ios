@@ -3,7 +3,7 @@
 // component=BCPButton
 
 // 자동 생성: node tools/scripts/gen-button-templates.mjs
-// Figma 세트 'small' (2080:22357) · variant 120개
+// Figma 세트 'button-small' (2080:22357) · variant 120개
 // 인스턴스 프로퍼티 철자: icon, icon-3d, Label
 import figma from 'figma'
 
@@ -11,24 +11,24 @@ const instance = figma.selectedInstance
 
 const label = instance.getString("Label")
 const type = instance.getEnum('type', {
-    "primary": ".primary",
-    "secondary": ".secondary",
+    "gradient": null,
     "outlined-1": ".outlined",
     "outlined-2": ".outlinedSubtle",
-    "gradient": null,
+    "primary": ".primary",
+    "secondary": ".secondary",
   })
 const typeName = instance.getEnum('type', {
-    "primary": "primary",
-    "secondary": "secondary",
+    "gradient": "gradient",
     "outlined-1": "outlined-1",
     "outlined-2": "outlined-2",
-    "gradient": "gradient",
+    "primary": "primary",
+    "secondary": "secondary",
   })
 // state=pressed 는 런타임 상태라 코드 prop 이 아니다 (docs/naming-contract.md §2)
 const enabled = instance.getEnum('state', {
+    "disabled": false,
     "normal": true,
     "pressed": true,
-    "disabled": false,
   })
 const disabledModifier = figma.code`${enabled ? '' : '.disabled(true)'}`
 

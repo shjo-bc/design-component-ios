@@ -3,7 +3,7 @@
 // component=BCPBoxTextField
 
 // 자동 생성: node tools/scripts/gen-select-templates.mjs
-// Figma 세트 'box-input-dropdown' (1191:11138) · variant 10개
+// Figma 세트 'textfield-box-dropdown' (1191:11138) · variant 10개
 import figma from 'figma'
 
 const instance = figma.selectedInstance
