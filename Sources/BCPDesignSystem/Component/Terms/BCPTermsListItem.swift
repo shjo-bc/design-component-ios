@@ -23,6 +23,13 @@ public enum BCPTermsDepth: Sendable {
 /// }
 /// ```
 ///
+/// 체크가 없는 약관(안내만 하고 동의를 받지 않는 항목)은 `selected` 없이 만든다.
+/// 체크와 그 옆 간격이 빠지고 글자가 체크 자리에서 시작한다. 누르면 `onDetail` 만 불린다.
+///
+/// ```swift
+/// BCPTermsListItem("개인정보 처리방침 안내", depth: .depth2, onDetail: { showPolicy() })
+/// ```
+///
 /// - 체크(박스)를 누르면 `onChange`, 글자·화살표를 누르면 `onDetail` 이 불린다.
 ///   `onDetail` 이 없으면 화살표는 그대로 그려지되 글자 영역은 체크를 토글한다.
 /// - `badge` 는 Figma 인스턴스 프로퍼티 `2depht_badge`(Figma 오타 그대로)·`1depth_badge` 다.
@@ -31,7 +38,8 @@ public enum BCPTermsDepth: Sendable {
 public struct BCPTermsListItem: View {
     private let title: String
     private let depth: BCPTermsDepth
-    private let selected: Bool
+    /// `nil` 이면 체크가 없는 약관이다.
+    private let selected: Bool?
     private let badge: BCPTermsBadgeLevel?
     private let onChange: ((Bool) -> Void)?
     private let onDetail: (() -> Void)?
@@ -54,6 +62,21 @@ public struct BCPTermsListItem: View {
         self.onDetail = onDetail
     }
 
+    /// 체크가 없는 약관. 동의를 받지 않고 내용만 보여 주는 항목에 쓴다.
+    public init(
+        _ title: String,
+        depth: BCPTermsDepth,
+        badge: BCPTermsBadgeLevel? = nil,
+        onDetail: (() -> Void)? = nil
+    ) {
+        self.title = title
+        self.depth = depth
+        self.selected = nil
+        self.badge = badge
+        self.onChange = nil
+        self.onDetail = onDetail
+    }
+
     private var textStyle: BCPTextStyle {
         switch depth {
         case .depth1: return BCPTypography.font1Paragraph4_1  // 16/24 bold
@@ -70,14 +93,18 @@ public struct BCPTermsListItem: View {
         switch depth {
         case .depth1, .depth2:
             HStack(spacing: BCPDimens.spacing12) {
-                BCPTermsRowCheck(depth: depth, selected: selected, onChange: onChange)
-                    .accessibilityLabel(title)
+                if let selected {
+                    BCPTermsRowCheck(depth: depth, selected: selected, onChange: onChange)
+                        .accessibilityLabel(title)
+                }
                 BCPTermsRowContent(
                     title: title, textStyle: textStyle, textColor: textColor,
                     badge: badge, badgeArrowSpacing: BCPDimens.spacing4,
                     selected: selected, onChange: onChange, onDetail: onDetail
                 )
             }
+            // 체크가 없어도 행 높이는 체크(24)가 있을 때와 같게 둔다 — 섞여 있어도 줄 간격이 흔들리지 않는다.
+            .frame(minHeight: 24)
             .padding(.leading, BCPDimens.spacing14)
             .padding(.trailing, BCPDimens.spacing4)
             .padding(.vertical, depth == .depth1 ? BCPDimens.spacing12 : BCPDimens.spacing10)
@@ -148,12 +175,16 @@ struct BCPTermsRowContent: View {
     let textColor: Color
     let badge: BCPTermsBadgeLevel?
     let badgeArrowSpacing: CGFloat
-    let selected: Bool
+    /// `nil` 이면 체크가 없는 약관 — 글자를 눌러도 토글할 것이 없다.
+    let selected: Bool?
     let onChange: ((Bool) -> Void)?
     let onDetail: (() -> Void)?
 
     @Environment(\.bcpTheme) private var theme
     @Environment(\.isEnabled) private var isEnabled
+
+    /// 누르면 무언가 일어나는가. 체크도 상세도 없으면 그냥 글자다.
+    private var isActionable: Bool { onDetail != nil || selected != nil }
 
     var body: some View {
         HStack(spacing: BCPDimens.spacing8) {
@@ -164,16 +195,19 @@ struct BCPTermsRowContent: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             HStack(spacing: badgeArrowSpacing) {
                 if let badge { BCPTermsBadge(level: badge) }
-                BCPTermsChevron(direction: .right, color: theme.semantic.colorSurface7)
+                // 체크도 상세도 없는 행은 눌러도 아무 일이 없으므로 이동할 것처럼 보이는 화살표를 뺀다.
+                if isActionable {
+                    BCPTermsChevron(direction: .right, color: theme.semantic.colorSurface7)
+                }
             }
         }
         .contentShape(Rectangle())
         .onTapGesture {
             guard isEnabled else { return }
-            if let onDetail { onDetail() } else { onChange?(!selected) }
+            if let onDetail { onDetail() } else if let selected { onChange?(!selected) }
         }
         .accessibilityElement(children: .combine)
-        .accessibilityAddTraits(.isButton)
+        .accessibilityAddTraits(isActionable ? .isButton : [])
         .accessibilityHint(onDetail == nil ? "" : "약관 내용 보기")
     }
 }
@@ -184,26 +218,35 @@ struct BCPTermsLeaf: View {
     let textStyle: BCPTextStyle
     let textColor: Color
     let spacing: CGFloat
-    let selected: Bool
+    /// `nil` 이면 체크 없이 글자만 그린다.
+    let selected: Bool?
     let onChange: ((Bool) -> Void)?
 
     @Environment(\.isEnabled) private var isEnabled
 
     var body: some View {
-        HStack(spacing: spacing) {
-            BCPTermsCheckmark(selected: selected, onChange: onChange)
-            Text(title)
-                .bcpTextStyle(textStyle)
-                .foregroundColor(textColor)
-                .bcpLineHeightFloor(textStyle)
-                .fixedSize(horizontal: true, vertical: false)
+        if let selected {
+            HStack(spacing: spacing) {
+                BCPTermsCheckmark(selected: selected, onChange: onChange)
+                label
+            }
+            .contentShape(Rectangle())
+            .onTapGesture { if isEnabled { onChange?(!selected) } }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(title)
+            .accessibilityAddTraits(selected ? [.isButton, .isSelected] : .isButton)
+            .accessibilityValue(selected ? "선택됨" : "선택 안 함")
+        } else {
+            label.frame(minHeight: 24)
         }
-        .contentShape(Rectangle())
-        .onTapGesture { if isEnabled { onChange?(!selected) } }
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(title)
-        .accessibilityAddTraits(selected ? [.isButton, .isSelected] : .isButton)
-        .accessibilityValue(selected ? "선택됨" : "선택 안 함")
+    }
+
+    private var label: some View {
+        Text(title)
+            .bcpTextStyle(textStyle)
+            .foregroundColor(textColor)
+            .bcpLineHeightFloor(textStyle)
+            .fixedSize(horizontal: true, vertical: false)
     }
 }
 
@@ -224,6 +267,8 @@ struct BCPTermsListItem_Previews: PreviewProvider {
                                  badge: .level2, onChange: { a = $0 }, onDetail: {})
                 BCPTermsListItem("[2] 개인정보 수집 · 이용 동의", depth: .depth2, selected: b,
                                  onChange: { b = $0 }, onDetail: {})
+                // 체크 없는 약관 — 안내만 한다
+                BCPTermsListItem("개인정보 처리방침 안내", depth: .depth2, onDetail: {})
                 BCPTermsSubItemRow(style: .list) {
                     BCPTermsListItem("휴대전화", depth: .depth3, selected: phone) { phone = $0 }
                     BCPTermsListItem("모바일 메세지(SMS 등)", depth: .depth3, selected: sms) { sms = $0 }

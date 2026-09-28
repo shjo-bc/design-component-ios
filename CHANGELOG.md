@@ -39,6 +39,12 @@ Figma `Terms` 페이지(`2820:3343`)를 구현했다. `Component/Terms/` 가 새
 - agree small 의 글자는 Figma 에 토큰 없이 Pretendard Bold 16/24 로 박혀 있어 값이 같은
   `font-1/paragraph/4-1` 로 읽었다.
 
+- **체크 없는 약관**을 만들 수 있다. `BCPTermsListItem` · `BCPTermsISPListItem` 을 `selected` 없이
+  만들면 체크와 옆 간격이 빠지고 글자가 체크 자리에서 시작한다. 누르면 `onDetail` 만 불린다.
+  행 높이는 체크가 있을 때와 같게 둬서 섞어 놓아도 줄 간격이 흔들리지 않는다. `onDetail` 도 없으면
+  화살표를 그리지 않는다. Figma 에는 이 모양이 없어(Overlays 의 약관 팝업도 체크 있는 행만 쓴다)
+  글자를 당기는 쪽으로 정했다 — 디자이너 확인 필요.
+
 색은 이미 생성돼 있던 `terms/sarface`(Figma 오타 그대로) · `terms/line-normal` · `terms/line-selected` ·
 `terms/radius`(16) 와 semantic `color/point/6` · `color/font/neutral/2·4` · `color/surface/7`,
 체크박스 토큰으로 전부 해결된다. 토큰을 새로 만들지 않았다.

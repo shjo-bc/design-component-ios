@@ -5,6 +5,8 @@ import SwiftUI
 /// `BCPTermsListItem` 과 구조는 같고 **더 촘촘하다** — 위아래 여백 6, 글자 한 단계 작음(15/14pt),
 /// 좌우 여백 없음. 배지 자리가 없다.
 ///
+/// 체크가 없는 약관은 `selected` 없이 만든다 (`BCPTermsListItem` 과 같은 규칙).
+///
 /// ```swift
 /// BCPTermsISPListItem("필수약관 전체동의", depth: .depth1, selected: all,
 ///                     onChange: { all = $0 }, onDetail: { showDetail() })
@@ -17,7 +19,8 @@ import SwiftUI
 public struct BCPTermsISPListItem: View {
     private let title: String
     private let depth: BCPTermsDepth
-    private let selected: Bool
+    /// `nil` 이면 체크가 없는 약관이다.
+    private let selected: Bool?
     private let onChange: ((Bool) -> Void)?
     private let onDetail: (() -> Void)?
 
@@ -37,6 +40,19 @@ public struct BCPTermsISPListItem: View {
         self.onDetail = onDetail
     }
 
+    /// 체크가 없는 약관. 동의를 받지 않고 내용만 보여 주는 항목에 쓴다.
+    public init(
+        _ title: String,
+        depth: BCPTermsDepth,
+        onDetail: (() -> Void)? = nil
+    ) {
+        self.title = title
+        self.depth = depth
+        self.selected = nil
+        self.onChange = nil
+        self.onDetail = onDetail
+    }
+
     private var textStyle: BCPTextStyle {
         depth == .depth1 ? BCPTypography.font1Paragraph5_1   // 15/22 bold
                          : BCPTypography.font1Paragraph6_2   // 14/20 regular
@@ -51,14 +67,18 @@ public struct BCPTermsISPListItem: View {
             switch depth {
             case .depth1, .depth2:
                 HStack(spacing: BCPDimens.spacing12) {
-                    BCPTermsRowCheck(depth: depth, selected: selected, onChange: onChange)
-                        .accessibilityLabel(title)
+                    if let selected {
+                        BCPTermsRowCheck(depth: depth, selected: selected, onChange: onChange)
+                            .accessibilityLabel(title)
+                    }
                     BCPTermsRowContent(
                         title: title, textStyle: textStyle, textColor: textColor,
                         badge: nil, badgeArrowSpacing: 0,
                         selected: selected, onChange: onChange, onDetail: onDetail
                     )
                 }
+                // 체크가 없어도 행 높이 36 을 지킨다.
+                .frame(minHeight: 24)
                 .frame(maxWidth: .infinity)
             case .depth3:
                 BCPTermsLeaf(title: title, textStyle: textStyle, textColor: textColor,
@@ -87,6 +107,8 @@ struct BCPTermsISPListItem_Previews: PreviewProvider {
                                     onChange: { a = $0 }, onDetail: {})
                 BCPTermsISPListItem("개인정보 제3자 제공 동의 (필수)", depth: .depth2, selected: b,
                                     onChange: { b = $0 }, onDetail: {})
+                // 체크 없는 약관 — 안내만 한다
+                BCPTermsISPListItem("ISP 서비스 안내", depth: .depth2, onDetail: {})
                 BCPTermsSubItemRow(style: .isp) {
                     BCPTermsISPListItem("모바일 메세지(SMS 등)", depth: .depth3, selected: sms1) { sms1 = $0 }
                     BCPTermsISPListItem("모바일 메세지(SMS 등)", depth: .depth3, selected: sms2) { sms2 = $0 }
