@@ -52,7 +52,9 @@ case .error1, .error2, .error3: …
 `textfield-box-basic` 등). Code Connect 템플릿의 파일명·`id` 는 **바꾸지 않았다** — 머리 주석의
 세트 이름만 새 이름이다. Controls 의 `state` 값이 `selected`/`unselected`·`on`/`off` 에서
 `true`/`false` 로 바뀌어 `control-*.figma.ts` 매핑을 새 값으로 다시 생성했다. 옛 템플릿은 새
-variant 를 전부 미선택으로 그렸다.
+값을 몰라 `BCPCheckbox(checked: , size: .medium) { _ in }.disabled(true)` 처럼 인자가 비고
+모든 variant 에 `.disabled(true)` 가 붙은, **컴파일되지 않는 스니펫**을 Dev Mode 에 보여 준다.
+재publish 해야 고쳐진다.
 
 ### 추가 — Terms 계열 (약관 동의 UI)
 
